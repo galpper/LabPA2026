@@ -1,0 +1,32 @@
+
+void listarRepartidoresDisponibles() {
+    cout << "Repartidores disponibles:" << endl;
+    
+}
+void listarMesasasignadasAMozo() {
+    cout << "Mesas asignadas a mozo:" << endl;
+    
+}
+
+void listarMenus() {
+    cout << "Menus disponibles:" << endl;
+    
+}
+void incrementarCantProdAVenta() {
+    cout << "Ingrese el codigo del producto a incrementar:" << endl;
+    string codigo;
+    cin >> codigo;
+    
+    // Lógica para incrementar la cantidad del producto en la venta
+}
+void decrementarCantProdAVenta() {
+    cout << "Ingrese el codigo del producto a decrementar:" << endl;
+    string codigo;
+    cin >> codigo;
+    
+    // Lógica para decrementar la cantidad del producto en la venta
+}
+void listarTransportes() {
+    cout << "Transportes disponibles:" << endl;
+    
+}
