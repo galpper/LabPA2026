@@ -1,124 +1,98 @@
-/*
+#include <iostream>
+#include <set>
+#include <string>
+
 #include "Factory.h"
 #include "ISistema.h"
-
-int main() {
-    ISistema * s = Factory::getSistema();
-    if (s == nullptr) {
-        cout << "Error al obtener el sistema." << endl;
-        return 1;
-    }
-}
-*/
-#include <iostream>
-
-#include "Clases/h/cliente.h"
-#include "Clases/h/propietario.h"
-#include "Clases/h/inmobiliaria.h"
-
-#include "Clases/h/casa.h"
-#include "Clases/h/apartamento.h"
-
-#include "Clases/h/publicacion.h"
-#include "Clases/h/administracionpropiedad.h"
-
-#include "DataType/h/dtcuentabancaria.h"
 
 using namespace std;
 
 int main() {
+    cout << "=== PRUEBAS ===" << endl;
 
-    cout << "=== PRUEBA DE CLASES ===" << endl;
+    ISistema* sys = Factory::getSistema();
 
-    direccion dir1("18 de Julio", 1234, "Montevideo");
+    // 1. Alta de Usuarios
+    cout << "\n--- 1. Alta de Usuarios ---" << endl;
+    
+    // Propietario 1
+    if (!sys->existeUsuario("prop1", "pass1", "Pedro", "pedro@gmail.com", TipoUsuario::PROPIETARIO)) {
+        dtcuentabancaria cuenta1(11111, "BROU");
+        sys->altaPropietario(99111222, cuenta1);
+        cout << "Propietario 'prop1' dado de alta." << endl;
+    } else {
+        cout << "Propietario 'prop1' ya existe." << endl;
+    }
 
-    dtcuentabancaria cuenta1(12345, "BROU");
+    // Propietario 2
+    if (!sys->existeUsuario("prop2", "pass2", "Maria", "maria@gmail.com", TipoUsuario::PROPIETARIO)) {
+        dtcuentabancaria cuenta2(22222, "Santander");
+        sys->altaPropietario(99333444, cuenta2);
+        cout << "Propietario 'prop2' dado de alta." << endl;
+    } else {
+        cout << "Propietario 'prop2' ya existe." << endl;
+    }
 
-    propietario* prop =
-        new propietario(
-            "juan123",
-            "123456",
-            "Juan",
-            "juan@gmail.com",
-            2,
-            cuenta1
-        );
+    // Cliente 1
+    if (!sys->existeUsuario("cli1", "pass3", "Juan", "juan@gmail.com", TipoUsuario::CLIENTE)) {
+        sys->altaCliente("Perez", 12345678);
+        cout << "Cliente 'cli1' dado de alta." << endl;
+    } else {
+        cout << "Cliente 'cli1' ya existe." << endl;
+    }
 
-    cout << "Propietario: "
-         << prop->getNombre()
-         << endl;
+    // Inmobiliaria 1
+    if (!sys->existeUsuario("inmo1", "pass4", "Inmobiliaria Montevideo", "contacto@inmomvd.com", TipoUsuario::INMOBILIARIA)) {
+        dtdireccion dirInmo(1234, "18 de Julio", "Montevideo");
+        sys->altaInmobiliaria(dirInmo, 24001122, "www.inmomvd.com");
+        cout << "Inmobiliaria 'inmo1' dada de alta." << endl;
+    } else {
+        cout << "Inmobiliaria 'inmo1' ya existe." << endl;
+    }
 
-    casa* c1 =
-        new casa(
-            dir1,
-            120,
-            2010,
-            1,
-            true,
-            TipoTecho::PLANO
-        );
+    // 2. Registrar Inmuebles para prop1
+    cout << "\n--- 2. Registrar Inmuebles para prop1 ---" << endl;
+    
+    // Seteamos prop1 como activo
+    sys->existeUsuario("prop1", "pass1", "Pedro", "pedro@gmail.com", TipoUsuario::PROPIETARIO);
 
-    cout << "Casa codigo: "
-         << c1->getCodigo()
-         << endl;
+    // Registrar Casa
+    if (!sys->existeInmueble(100, "Av. Italia", "Montevideo", 150.5, 2015, 101, TipoInmueble::CASA)) {
+        sys->altaCasa(true, TipoTecho::PLANO);
+        cout << "Casa con codigo 101 registrada para prop1." << endl;
+    } else {
+        cout << "Inmueble 101 ya existe." << endl;
+    }
 
-    inmobiliaria* inmob =
-        new inmobiliaria(
-            "inmo1",
-            "abcdef",
-            "Inmobiliaria Centro",
-            "contacto@inmo.com",
-            dir1,
-            24001122,
-            "www.inmo.com"
-        );
+    // Registrar Apartamento
+    if (!sys->existeInmueble(502, "Buxareo", "Montevideo", 75.0, 2020, 102, TipoInmueble::APARTAMENTO)) {
+        sys->altaApartamento(5, true, 8500.0);
+        cout << "Apartamento con codigo 102 registrado para prop1." << endl;
+    } else {
+        cout << "Inmueble 102 ya existe." << endl;
+    }
 
-    cout << "Inmobiliaria: "
-         << inmob->getNombre()
-         << endl;
+    // 3. Listar Propietarios y Seleccionar por Inmobiliaria
+    cout << "\n--- 3. Listar Propietarios por Inmobiliaria ---" << endl;
+    
+    // Seteamos inmo1 como activa
+    sys->existeUsuario("inmo1", "pass4", "Inmobiliaria Montevideo", "contacto@inmomvd.com", TipoUsuario::INMOBILIARIA);
 
-    administracionpropiedad* admin =
-        new administracionpropiedad(
-            "01/06/2026",
-            c1,
-            inmob
-        );
+    set<dtpropietario> props = sys->listarPropietarios();
+    cout << "Lista de propietarios disponibles:" << endl;
+    for (dtpropietario p : props) {
+        cout << "- Nickname: " << p.getNickname() 
+             << ", Nombre: " << p.getNombre() 
+             << ", Tel: " << p.getTelefono() 
+             << ", Banco: " << p.getCuenta().getBanco() << endl;
+    }
 
-    cout << "Fecha admin: "
-         << admin->getFechaInicio()
-         << endl;
+    cout << "\nInmobiliaria selecciona prop1..." << endl;
+    sys->seleccionarPropietario("prop1");
+    cout << "Prop1 seleccionado." << endl;
 
-    publicacion* pub =
-        new publicacion(
-            "02/06/2026",
-            TipoPublicacion::VENTA,
-            "Hermosa casa",
-            1,
-            250000,
-            true,
-            c1,
-            inmob
-        );
-
-    cout << "Publicacion: "
-         << pub->getTexto()
-         << endl;
-
-    cout << "Precio: "
-         << pub->getPrecio()
-         << endl;
-
-    cout << "Activa: "
-         << pub->getActiva()
-         << endl;
-
-    delete prop;
-    delete c1;
-    delete inmob;
-    delete admin;
-    delete pub;
-
-    cout << "=== FIN ===" << endl;
-
+    cout << "\n=== FIN ===" << endl;
+    
+    delete sys;
     return 0;
 }

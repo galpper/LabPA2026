@@ -9,6 +9,7 @@ propietario::propietario(string nickname, string contrasena, string nombre, stri
 
     this->telefono = telefono;
     this->cuenta = cuenta;
+    this->inmuebles = new List();
 }
 
 int propietario::getTelefono() {

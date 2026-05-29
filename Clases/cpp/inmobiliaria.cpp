@@ -11,6 +11,8 @@ inmobiliaria::inmobiliaria(string nickname, string contrasena, string nombre, st
     this->dir = dir;
     this->telefono = telefono;
     this->url = url;
+    this->propietariosRepresentados = new List();
+    this->administraciones = new List();
 }
 
 direccion inmobiliaria::getDireccion() {

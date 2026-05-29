@@ -1,4 +1,4 @@
-include "../h/DTFecha.h"
+#include "../h/DTFecha.h"
 using namespace std;
 
 DTFecha::DTFecha(int dia, int mes, int anio){
