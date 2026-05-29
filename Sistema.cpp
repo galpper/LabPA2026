@@ -56,7 +56,9 @@ Sistema * Sistema::getInstance() {
 bool Sistema::existeUsuario(string nickname, string pass, string nombre, string email, TipoUsuario tipoUsuario) {
     String k(nickname.c_str());
     if (usuarios->member(&k)) {
-        // En caso de existir, si es de tipo Propietario o Inmobiliaria, lo dejamos seteado
+        // aca guardamos al propietario o a la inmobiliaria en la sesion.
+        // los dejamos activos en el sistema porque el caso de uso de alta
+        // de inmueble te va a pedir saber quien es el usuario de este momento.
         usuario * u = (usuario*) usuarios->find(&k);
         if (u->getTipoUsuario() == TipoUsuario::PROPIETARIO) {
             propietarioActual = (propietario*) u;
