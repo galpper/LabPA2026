@@ -18,7 +18,7 @@ public:
     inmobiliaria();
 
     inmobiliaria(string nickname, string contrasena, string nombre, string email, direccion dir, int telefono,string url);
-
+    virtual ~inmobiliaria();
     direccion getDireccion();
     int getTelefono();
     string getUrl();

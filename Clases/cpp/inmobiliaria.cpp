@@ -34,4 +34,7 @@ ICollection* inmobiliaria::getPropietariosRepresentados() {
 ICollection* inmobiliaria::getAdministraciones() {
     return administraciones;
 }
-
+inmobiliaria::~inmobiliaria() {
+    delete propietariosRepresentados;
+    delete administraciones;
+}

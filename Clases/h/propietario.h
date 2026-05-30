@@ -18,7 +18,7 @@ public:
     propietario();
 
     propietario(string nickname, string contrasena, string nombre, string email, int telefono, dtcuentabancaria cuenta);
-
+    virtual ~propietario();
     int getTelefono();
     dtcuentabancaria getCuenta();
     ICollection* getInmuebles();
