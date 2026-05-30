@@ -22,3 +22,6 @@ dtcuentabancaria propietario::getCuenta() {
 ICollection* propietario::getInmuebles() {
     return inmuebles;
 }
+propietario::~propietario() {
+    delete inmuebles;
+}
