@@ -56,5 +56,8 @@ class Sistema : public ISistema {
 
     set<dtpropietario> listarPropietarios() override;
     void seleccionarPropietario(string nickname) override;
+
+    set<dtinmobiliaria> listarInmobiliarias() override;
+    set<dtinmueble> seleccionarInmueble(string nickname) override;
 };
 #endif

@@ -13,6 +13,11 @@ dtinmobiliaria::dtinmobiliaria(string nickname, string contrasena, string nombre
     this->url = url;
 }
 
+dtinmobiliaria::dtinmobiliaria(string nickname, string nombre){
+    this->nickname = nickname;
+    this->nombre = nombre;
+}
+
 string dtinmobiliaria::getNickname() {
     return nickname;
 }

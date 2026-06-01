@@ -22,6 +22,8 @@ public:
 
     dtinmueble(string fechaInicio, dtdireccion direccion, float superficie, int anioConstruccion, int codigo, TipoInmueble tipoInmueble);
 
+    dtinmueble(dtdireccion direccion, float superficie, int anioConstruccion, int codigo, TipoInmueble tipoInmueble);
+
     string getFechaInicio();
     dtdireccion getDireccion();
     float getSuperficie();

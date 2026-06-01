@@ -5,6 +5,7 @@
 #include "../../ICollection/interfaces/ICollectible.h"
 #include "direccion.h"
 #include "TipoInmueble.h"
+#include "DataType/h/dtinmueble.h"
 
 class inmueble : public ICollectible {
 protected:
@@ -24,5 +25,6 @@ public:
     direccion getDireccion();
     int getAnioConstruccion();
     TipoInmueble getTipoInmueble();
+    dtinmueble crearDTInmueble();
     virtual ~inmueble();
 };

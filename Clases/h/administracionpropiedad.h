@@ -4,6 +4,7 @@
 #include "inmueble.h"
 #include "inmobiliaria.h"
 #include "../../ICollection/interfaces/ICollectible.h"
+#include "DataType/h/dtinmueble.h"
 
 using namespace std;
 
@@ -27,4 +28,6 @@ public:
     inmobiliaria* getInmobiliaria();
 
     virtual ~administracionpropiedad();
+
+    dtinmueble armarDTInmueble();
 };

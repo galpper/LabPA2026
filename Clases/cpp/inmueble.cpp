@@ -30,4 +30,20 @@ TipoInmueble inmueble::getTipoInmueble() {
     return tipoInmueble;
 }
 
+dtinmueble inmueble::crearDTInmueble() {
+    dtdireccion dtDir(
+        dir.getNumero(),
+        dir.getCalle(),
+        dir.getDepartamento()
+    );
+
+    return dtinmueble(
+        dtDir,
+        superficie,
+        anioConstruccion,
+        codigo,
+        tipoInmueble
+    );
+}
+
 inmueble::~inmueble() {}

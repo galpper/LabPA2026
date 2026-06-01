@@ -152,3 +152,38 @@ void Sistema::seleccionarPropietario(string nickname) {
         }
     }
 }
+
+
+set<dtinmobiliaria> Sistema::listarInmobiliarias(){
+    set<dtinmobiliaria> res;
+    IIterator * it = usuarios->getIterator();
+    while (it->hasCurrent()) {
+        usuario * u = (usuario*) it->getCurrent();
+        if (u->getTipoUsuario() == TipoUsuario::INMOBILIARIA) {
+            inmobiliaria * i = (inmobiliaria*) u;
+            dtinmobiliaria dt(i->getNickname(), i->getNombre());
+            res.insert(dt);
+        }
+        it->next();
+    }
+    delete it;
+    return res;
+}
+
+set<dtinmueble> Sistema::seleccionarInmueble(string nickname){
+    set<dtinmueble> res;
+    String k(nickname.c_str());
+    usuario * u = (usuario*) usuarios->find(&k);
+    if (u != nullptr && u->getTipoUsuario() == TipoUsuario::INMOBILIARIA){
+        inmobiliaria* i = (inmobiliaria*) u;
+        IIterator * it = i->getAdministraciones()->getIterator();
+        while(it->hasCurrent()){
+            administracionpropiedad * ap = (administracionpropiedad*) it->getCurrent();
+            res.insert(ap->armarDTInmueble());
+            it->next();
+        }
+
+        delete it;
+    }
+    return res;
+}

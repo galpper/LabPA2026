@@ -1,4 +1,4 @@
-#include "../h/administracionpropiedad.h"
+#include "Clases/h/administracionpropiedad.h"
 
 administracionpropiedad::administracionpropiedad() {}
 
@@ -18,6 +18,26 @@ inmueble* administracionpropiedad::getInmueble() {
 
 inmobiliaria* administracionpropiedad::getInmobiliaria() {
     return inmob;
+}
+
+dtinmueble administracionpropiedad::armarDTInmueble() {
+
+    inmueble* inm = getInmueble();
+
+    dtdireccion dtDir(
+        inm->getDireccion().getNumero(),
+        inm->getDireccion().getCalle(),
+        inm->getDireccion().getDepartamento()
+    );
+
+    return dtinmueble(
+        fechaInicio,
+        dtDir,
+        inm->getSuperficie(),
+        inm->getAnioConstruccion(),
+        inm->getCodigo(),
+        inm->getTipoInmueble()
+    );
 }
 
 administracionpropiedad::~administracionpropiedad() {}

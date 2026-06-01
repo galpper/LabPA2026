@@ -11,6 +11,14 @@ dtinmueble::dtinmueble(string fechaInicio, dtdireccion direccion, float superfic
     this->tipoInmueble = tipoInmueble;
 }
 
+dtinmueble::dtinmueble(dtdireccion direccion, float superficie, int anioConstruccion, int codigo, TipoInmueble tipoInmueble) {
+    this->direccion = direccion;
+    this->superficie = superficie;
+    this->anioConstruccion = anioConstruccion;
+    this->codigo = codigo;
+    this->tipoInmueble = tipoInmueble;
+}
+
 string dtinmueble::getFechaInicio() {
     return fechaInicio;
 }

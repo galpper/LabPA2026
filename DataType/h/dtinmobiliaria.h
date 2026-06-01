@@ -22,6 +22,7 @@ public:
     dtinmobiliaria();
 
     dtinmobiliaria(string nickname, string contrasena, string nombre, string email, TipoUsuario tipoUsuario, dtdireccion direccion, int telefono, string url);
+    dtinmobiliaria(string nickname, string nombre);
     string getNickname();
     string getContrasena();
     string getNombre();
