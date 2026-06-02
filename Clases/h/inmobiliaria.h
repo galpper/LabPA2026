@@ -2,9 +2,13 @@
 
 #include <iostream>
 #include <string>
+#include <set>
 #include "../../ICollection/interfaces/ICollection.h"
 #include "usuario.h"
 #include "direccion.h"
+#include "../../DataType/h/dtpublicacion.h"
+#include "TipoPublicacion.h"
+#include "TipoInmueble.h"
 
 class inmobiliaria : public usuario {
 private:
@@ -24,4 +28,6 @@ public:
     string getUrl();
     ICollection* getPropietariosRepresentados();
     ICollection* getAdministraciones();
+    
+    set<dtpublicacion> listarPublicaciones(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm);
 };

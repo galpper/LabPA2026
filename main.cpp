@@ -4,6 +4,9 @@
 
 #include "Factory.h"
 #include "ISistema.h"
+#include "DataType/h/dtpublicacion.h"
+#include "Clases/h/TipoPublicacion.h"
+#include "Clases/h/TipoInmueble.h"
 #include <unistd.h>
 #include <cstdlib>
 
@@ -189,6 +192,69 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
     }
 }
 
+// Consulta de publicaciones.
+void menuConsultaPublicaciones(ISistema* isistema) {
+    cout << "\n=== CONSULTA DE PUBLICACIONES ===" << endl;
+    cout << "Tipo de publicación (1- VENTA, 2- ALQUILER): ";
+    int tipoInt;
+    cin >> tipoInt;
+    TipoPublicacion tipoPub = TipoPublicacion::VENTA;
+    if (tipoInt == 2) tipoPub = TipoPublicacion::ALQUILER;
+    
+    float precioMin, precioMax;
+    cout << "Ingrese precio mínimo: ";
+    cin >> precioMin;
+    cout << "Ingrese precio máximo: ";
+    cin >> precioMax;
+    
+    cout << "Tipo de inmueble (1- Casa, 2- Apartamento, 3- Ambos): ";
+    int tipoInmInt;
+    cin >> tipoInmInt;
+    TipoInmueble tipoInm = TipoInmueble::AMBOS;
+    if (tipoInmInt == 1) tipoInm = TipoInmueble::CASA;
+    else if (tipoInmInt == 2) tipoInm = TipoInmueble::APARTAMENTO;
+    
+    set<dtpublicacion> pubs = isistema->listarPublicaciones(tipoPub, precioMin, precioMax, tipoInm);
+    if (pubs.empty()) {
+        cout << "No hay publicaciones con los filtros especificados." << endl;
+    } else {
+        cout << "\nPublicaciones encontradas:" << endl;
+        for (dtpublicacion p : pubs) {
+            cout << "- Código: " << p.getCodigo()
+                 << " | Fecha: " << p.getFecha()
+                 << " | Inmobiliaria: " << p.getNombreInmobiliaria()
+                 << " | Precio: " << p.getPrecio()
+                 << "\n  Texto: " << p.getTexto() << endl;
+        }
+        
+        string verDetalle;
+        cout << "\n¿Desea ver el detalle de algún inmueble? (s/n): ";
+        cin >> verDetalle;
+        if (verDetalle == "s" || verDetalle == "S") {
+            int codigoPub;
+            cout << "Ingrese el código de la publicación: ";
+            cin >> codigoPub;
+            
+            dtinmueble inm = isistema->seleccionarPublicacion(codigoPub);
+            if (inm.getCodigo() == 0) {
+                cout << "No se encontró el inmueble o código inválido." << endl;
+            } else {
+                cout << "\n=== DETALLE DEL INMUEBLE ===" << endl;
+                cout << "Código: " << inm.getCodigo() << endl;
+                cout << "Fecha de inicio: " << inm.getFechaInicio() << endl;
+                cout << "Superficie: " << inm.getSuperficie() << " m2" << endl;
+                cout << "Año de construcción: " << inm.getAnioConstruccion() << endl;
+                cout << "Dirección: " << inm.getDireccion().getCalle() << " " << inm.getDireccion().getNumeroPuerta() << ", " << inm.getDireccion().getDepartamento() << endl;
+                cout << "Tipo de inmueble: " << (inm.getTipoInmueble() == TipoInmueble::CASA ? "Casa" : "Apartamento") << endl;
+            }
+        }
+    }
+    cout << "\nPresione Enter para continuar...";
+    cin.ignore();
+    cin.get();
+    system("clear");
+}
+
 // Ejecutar pruebas.
 void ejecutarPruebas(ISistema* isistema) {
     cout << "\n=== EJECUTANDO PRUEBAS PREDETERMINADAS ===" << endl;
@@ -302,13 +368,18 @@ int main() {
                 cout << "Opción 'Alta publicacion' no implementada aún." << endl;
                 break;
             case 3:
-                cout << "Opción 'Consulta publicaciones' no implementada aún." << endl;
+                menuConsultaPublicaciones(isistema);
                 break;
             case 4:
                 cout << "Opción 'Eliminar inmueble' no implementada aún." << endl;
                 break;
             case 5:
-                cout << "Opción 'Cargar datos' no implementada aún." << endl;
+                isistema->cargarDatos();
+                cout << "Datos cargados con éxito." << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.ignore();
+                cin.get();
+                system("clear");
                 break;
             case 6:
                 ejecutarPruebas(isistema);

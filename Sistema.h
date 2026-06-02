@@ -50,5 +50,14 @@ class Sistema : public ISistema {
 
     set<dtpropietario> listarPropietarios() override;
     void seleccionarPropietario(string nickname) override;
+
+    // Listar publicaciones filtradas.
+    set<dtpublicacion> listarPublicaciones(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm) override;
+
+    // Seleccionar publicacion y retornar su inmueble.
+    dtinmueble seleccionarPublicacion(int codigo) override;
+
+    // Cargar datos predeterminados en el sistema.
+    void cargarDatos() override;
 };
 #endif

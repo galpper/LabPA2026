@@ -7,9 +7,12 @@
 #include "Clases/h/TipoUsuario.h"
 #include "Clases/h/TipoInmueble.h"
 #include "Clases/h/TipoTecho.h"
+#include "Clases/h/TipoPublicacion.h"
 #include "DataType/h/dtcuentabancaria.h"
 #include "DataType/h/dtdireccion.h"
 #include "DataType/h/dtpropietario.h"
+#include "DataType/h/dtpublicacion.h"
+#include "DataType/h/dtinmueble.h"
 
 using namespace std;
 
@@ -28,5 +31,9 @@ class ISistema {
 
         virtual set<dtpropietario> listarPropietarios() = 0;
         virtual void seleccionarPropietario(string nickname) = 0;
+        
+        virtual set<dtpublicacion> listarPublicaciones(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm) = 0;
+        virtual dtinmueble seleccionarPublicacion(int codigo) = 0;
+        virtual void cargarDatos() = 0;
 };
 #endif
