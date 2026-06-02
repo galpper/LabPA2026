@@ -28,4 +28,7 @@ public:
     int getAnioConstruccion();
     int getCodigo();
     TipoInmueble getTipoInmueble();
+    bool operator<(const dtinmueble& other) const {
+        return codigo < other.codigo;
+    }
 };

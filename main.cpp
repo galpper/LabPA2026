@@ -5,32 +5,58 @@
 #include "Factory.h"
 #include "ISistema.h"
 #include "DataType/h/dtpublicacion.h"
+#include "DataType/h/dtinmobiliaria.h"
+#include "DataType/h/dtinmueblepropietario.h"
 #include "Clases/h/TipoPublicacion.h"
 #include "Clases/h/TipoInmueble.h"
 #include <unistd.h>
 #include <cstdlib>
+#include <limits>
 
 using namespace std;
+
+// Leer un número entero de manera segura.
+int leerEntero() {
+    int valor;
+    while (!(cin >> valor)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Entrada inválida. Ingrese un número entero: ";
+    }
+    return valor;
+}
+
+// Leer un número decimal de manera segura.
+float leerFloat() {
+    float valor;
+    while (!(cin >> valor)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Entrada inválida. Ingrese un número decimal: ";
+    }
+    return valor;
+}
 
 // Alta de usuario.
 void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
     cout << "\n=== ALTA DE USUARIO ===" << endl;
     string nickname, pass, nombre, email;
+    cin.ignore();
     cout << "Ingrese nickname: ";
-    cin >> nickname;
+    getline(cin, nickname);
 
     do {
         cout << "Ingrese contraseña (mínimo 6 caracteres): ";
-        cin >> pass;
+        getline(cin, pass);
         if (pass.length() < 6) {
             cout << "Contraseña muy corta. Poné una de al menos 6." << endl;
         }
     } while (pass.length() < 6);
     
     cout << "Ingrese nombre: ";
-    cin >> nombre;
+    getline(cin, nombre);
     cout << "Ingrese email: ";
-    cin >> email;
+    getline(cin, email);
     
     cout << "Seleccione tipo de usuario (1- Cliente, 2- Propietario, 3- Inmobiliaria): ";
     int tipoInt;
@@ -55,10 +81,11 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
     if (tipo == TipoUsuario::CLIENTE) {
         string apellido;
         int documento;
+        cin.ignore();
         cout << "Ingrese apellido: ";
-        cin >> apellido;
+        getline(cin, apellido);
         cout << "Ingrese documento: ";
-        cin >> documento;
+        documento = leerEntero();
         
         isistema->altaCliente(apellido, documento);
         system("clear");
@@ -71,11 +98,12 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
         int numCuenta;
         string banco;
         cout << "Ingrese teléfono de contacto: ";
-        cin >> telefono;
+        telefono = leerEntero();
         cout << "Ingrese número de cuenta bancaria: ";
-        cin >> numCuenta;
+        numCuenta = leerEntero();
+        cin.ignore();
         cout << "Ingrese banco: ";
-        cin >> banco;
+        getline(cin, banco);
         
         dtcuentabancaria cuenta(numCuenta, banco);
         isistema->altaPropietario(telefono, cuenta);
@@ -88,20 +116,22 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
             string calle, depto;
             int numPuerta, anio;
             float superficie;
+            cin.ignore();
             cout << "Ingrese calle: ";
-            cin >> calle;
+            getline(cin, calle);
             cout << "Ingrese número de puerta: ";
-            cin >> numPuerta;
+            numPuerta = leerEntero();
+            cin.ignore();
             cout << "Ingrese departamento: ";
-            cin >> depto;
+            getline(cin, depto);
             cout << "Ingrese superficie (m2): ";
-            cin >> superficie;
+            superficie = leerFloat();
             cout << "Ingrese año de construcción: ";
-            cin >> anio;
+            anio = leerEntero();
             
             cout << "Tipo de inmueble (1- Casa, 2- Apartamento): ";
             int tipoInmInt;
-            cin >> tipoInmInt;
+            tipoInmInt = leerEntero();
             
             if (tipoInmInt == 1) {
                 string phStr;
@@ -112,7 +142,7 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
                 
                 cout << "Tipo de techo (1- Liviano, 2- Dos aguas, 3- Plano): ";
                 int techoInt;
-                cin >> techoInt;
+                techoInt = leerEntero();
                 TipoTecho techo = TipoTecho::PLANO;
                 if (techoInt == 1) techo = TipoTecho::LIVIANO;
                 else if (techoInt == 2) techo = TipoTecho::DOS_AGUAS;
@@ -128,12 +158,12 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
                 bool asc = false;
                 float gastos;
                 cout << "Ingrese número de piso: ";
-                cin >> piso;
+                piso = leerEntero();
                 cout << "Tiene ascensor (s/n): ";
                 cin >> ascStr;
                 if (ascStr == "s" || ascStr == "S") asc = true;
                 cout << "Ingrese gastos comunes: ";
-                cin >> gastos;
+                gastos = leerFloat();
                 
                 isistema->existeInmueble(numPuerta, calle, depto, superficie, anio, codigoInmueble, TipoInmueble::APARTAMENTO);
                 isistema->altaApartamento(piso, asc, gastos);
@@ -152,15 +182,17 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
         string url, calle, depto;
         int numPuerta;
         cout << "Ingrese teléfono: ";
-        cin >> tel;
+        tel = leerEntero();
+        cin.ignore();
         cout << "Ingrese URL del sitio web: ";
-        cin >> url;
+        getline(cin, url);
         cout << "Dirección - Ingrese calle: ";
-        cin >> calle;
+        getline(cin, calle);
         cout << "Dirección - Ingrese número de puerta: ";
-        cin >> numPuerta;
+        numPuerta = leerEntero();
+        cin.ignore();
         cout << "Dirección - Ingrese departamento: ";
-        cin >> depto;
+        getline(cin, depto);
         
         dtdireccion dir(numPuerta, calle, depto);
         isistema->altaInmobiliaria(dir, tel, url);
@@ -170,19 +202,20 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
         cout << "Desea registrar un propietario representado por la inmobiliaria (s/n): ";
         cin >> agregarRep;
         while (agregarRep == "s" || agregarRep == "S") {
-            set<dtpropietario> props = isistema->listarPropietarios();
-            if (props.empty()) {
+            set<dtpropietario> conjuntoPropietarios = isistema->listarPropietarios();
+            if (conjuntoPropietarios.empty()) {
                 cout << "No hay propietarios registrados en el sistema." << endl;
                 break;
             }
             cout << "\nPropietarios registrados:" << endl;
-            for (dtpropietario p : props) {
-                cout << "- Nickname: " << p.getNickname() << ", Nombre: " << p.getNombre() << endl;
+            for (dtpropietario propietarioActual : conjuntoPropietarios) {
+                cout << "- Nickname: " << propietarioActual.getNickname() << ", Nombre: " << propietarioActual.getNombre() << endl;
             }
             
             string nickRep;
+            cin.ignore();
             cout << "Ingrese nickname del propietario a representar: ";
-            cin >> nickRep;
+            getline(cin, nickRep);
             isistema->seleccionarPropietario(nickRep);
             cout << "Relación de representación generada con éxito." << endl;
             
@@ -196,59 +229,111 @@ void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
 void menuConsultaPublicaciones(ISistema* isistema) {
     cout << "\n=== CONSULTA DE PUBLICACIONES ===" << endl;
     cout << "Tipo de publicación (1- VENTA, 2- ALQUILER): ";
-    int tipoInt;
-    cin >> tipoInt;
-    TipoPublicacion tipoPub = TipoPublicacion::VENTA;
-    if (tipoInt == 2) tipoPub = TipoPublicacion::ALQUILER;
+    int tipoSeleccionado;
+    tipoSeleccionado = leerEntero();
+    TipoPublicacion tipoDePublicacion = TipoPublicacion::VENTA;
+    if (tipoSeleccionado == 2) tipoDePublicacion = TipoPublicacion::ALQUILER;
     
-    float precioMin, precioMax;
+    float precioMinimo, precioMaximo;
     cout << "Ingrese precio mínimo: ";
-    cin >> precioMin;
+    precioMinimo = leerFloat();
     cout << "Ingrese precio máximo: ";
-    cin >> precioMax;
+    precioMaximo = leerFloat();
     
     cout << "Tipo de inmueble (1- Casa, 2- Apartamento, 3- Ambos): ";
-    int tipoInmInt;
-    cin >> tipoInmInt;
-    TipoInmueble tipoInm = TipoInmueble::AMBOS;
-    if (tipoInmInt == 1) tipoInm = TipoInmueble::CASA;
-    else if (tipoInmInt == 2) tipoInm = TipoInmueble::APARTAMENTO;
+    int tipoInmuebleSeleccionado;
+    tipoInmuebleSeleccionado = leerEntero();
+    TipoInmueble tipoDeInmueble = TipoInmueble::AMBOS;
+    if (tipoInmuebleSeleccionado == 1) tipoDeInmueble = TipoInmueble::CASA;
+    else if (tipoInmuebleSeleccionado == 2) tipoDeInmueble = TipoInmueble::APARTAMENTO;
     
-    set<dtpublicacion> pubs = isistema->listarPublicaciones(tipoPub, precioMin, precioMax, tipoInm);
-    if (pubs.empty()) {
+    set<dtpublicacion> publicacionesEncontradas = isistema->listarPublicaciones(tipoDePublicacion, precioMinimo, precioMaximo, tipoDeInmueble);
+    if (publicacionesEncontradas.empty()) {
         cout << "No hay publicaciones con los filtros especificados." << endl;
     } else {
         cout << "\nPublicaciones encontradas:" << endl;
-        for (dtpublicacion p : pubs) {
-            cout << "- Código: " << p.getCodigo()
-                 << " | Fecha: " << p.getFecha()
-                 << " | Inmobiliaria: " << p.getNombreInmobiliaria()
-                 << " | Precio: " << p.getPrecio()
-                 << "\n  Texto: " << p.getTexto() << endl;
+        for (dtpublicacion publicacionActual : publicacionesEncontradas) {
+            cout << "- Código: " << publicacionActual.getCodigo()
+                 << " | Fecha: " << publicacionActual.getFecha()
+                 << " | Inmobiliaria: " << publicacionActual.getNombreInmobiliaria()
+                 << " | Precio: " << publicacionActual.getPrecio()
+                 << "\n  Texto: " << publicacionActual.getTexto() << endl;
         }
         
-        string verDetalle;
+        string deseaVerDetalle;
         cout << "\n¿Desea ver el detalle de algún inmueble? (s/n): ";
-        cin >> verDetalle;
-        if (verDetalle == "s" || verDetalle == "S") {
-            int codigoPub;
+        cin >> deseaVerDetalle;
+        if (deseaVerDetalle == "s" || deseaVerDetalle == "S") {
+            int codigoDePublicacion;
             cout << "Ingrese el código de la publicación: ";
-            cin >> codigoPub;
+            codigoDePublicacion = leerEntero();
             
-            dtinmueble inm = isistema->seleccionarPublicacion(codigoPub);
-            if (inm.getCodigo() == 0) {
+            dtinmueble inmuebleEncontrado = isistema->seleccionarPublicacion(codigoDePublicacion);
+            if (inmuebleEncontrado.getCodigo() == 0) {
                 cout << "No se encontró el inmueble o código inválido." << endl;
             } else {
                 cout << "\n=== DETALLE DEL INMUEBLE ===" << endl;
-                cout << "Código: " << inm.getCodigo() << endl;
-                cout << "Fecha de inicio: " << inm.getFechaInicio() << endl;
-                cout << "Superficie: " << inm.getSuperficie() << " m2" << endl;
-                cout << "Año de construcción: " << inm.getAnioConstruccion() << endl;
-                cout << "Dirección: " << inm.getDireccion().getCalle() << " " << inm.getDireccion().getNumeroPuerta() << ", " << inm.getDireccion().getDepartamento() << endl;
-                cout << "Tipo de inmueble: " << (inm.getTipoInmueble() == TipoInmueble::CASA ? "Casa" : "Apartamento") << endl;
+                cout << "Código: " << inmuebleEncontrado.getCodigo() << endl;
+                cout << "Fecha de inicio: " << inmuebleEncontrado.getFechaInicio() << endl;
+                cout << "Superficie: " << inmuebleEncontrado.getSuperficie() << " m2" << endl;
+                cout << "Año de construcción: " << inmuebleEncontrado.getAnioConstruccion() << endl;
+                cout << "Dirección: " << inmuebleEncontrado.getDireccion().getCalle() << " " << inmuebleEncontrado.getDireccion().getNumeroPuerta() << ", " << inmuebleEncontrado.getDireccion().getDepartamento() << endl;
+                cout << "Tipo de inmueble: " << (inmuebleEncontrado.getTipoInmueble() == TipoInmueble::CASA ? "Casa" : "Apartamento") << endl;
             }
         }
     }
+    cout << "\nPresione Enter para continuar...";
+    cin.ignore();
+    cin.get();
+    system("clear");
+}
+
+// Alta de administracion de propiedad.
+void menuAltaAdministracionPropiedad(ISistema* isistema) {
+    cout << "\n=== ALTA DE ADMINISTRACIÓN DE PROPIEDAD ===" << endl;
+    set<dtinmobiliaria> inmobiliariasRegistradas = isistema->listarInmobiliarias();
+    if (inmobiliariasRegistradas.empty()) {
+        cout << "No hay inmobiliarias registradas." << endl;
+        cout << "\nPresione Enter para continuar...";
+        cin.ignore();
+        cin.get();
+        system("clear");
+        return;
+    }
+
+    cout << "\nInmobiliarias registradas:" << endl;
+    for (dtinmobiliaria inmobiliariaActual : inmobiliariasRegistradas) {
+        cout << "- Nickname: " << inmobiliariaActual.getNickname() << " | Nombre: " << inmobiliariaActual.getNombre() << endl;
+    }
+
+    string nicknameInmobiliariaSeleccionada;
+    cout << "\nSeleccione el nickname de la inmobiliaria: ";
+    cin >> nicknameInmobiliariaSeleccionada;
+
+    set<dtinmueblepropietario> inmueblesDePropietarios = isistema->seleccionarInmobiliaria(nicknameInmobiliariaSeleccionada);
+    if (inmueblesDePropietarios.empty()) {
+        cout << "La inmobiliaria no representa propietarios con inmuebles." << endl;
+        cout << "\nPresione Enter para continuar...";
+        cin.ignore();
+        cin.get();
+        system("clear");
+        return;
+    }
+
+    cout << "\nInmuebles de propietarios representados:" << endl;
+    for (dtinmueblepropietario inmuebleActual : inmueblesDePropietarios) {
+        cout << "- Código: " << inmuebleActual.getCodigo() 
+             << " | Dirección: " << inmuebleActual.getDireccion().getCalle() << " " << inmuebleActual.getDireccion().getNumeroPuerta() << ", " << inmuebleActual.getDireccion().getDepartamento()
+             << " | Propietario: " << inmuebleActual.getNombrePropietario() << endl;
+    }
+
+    int codigoInmuebleSeleccionado;
+    cout << "\nIngrese el código del inmueble a comenzar a administrar: ";
+    codigoInmuebleSeleccionado = leerEntero();
+
+    isistema->altaAdministracionPropiedad(codigoInmuebleSeleccionado);
+    cout << "Administración registrada con éxito." << endl;
+
     cout << "\nPresione Enter para continuar...";
     cin.ignore();
     cin.get();
@@ -341,6 +426,136 @@ void ejecutarPruebas(ISistema* isistema) {
     cout << "\n=== PRUEBAS FINALIZADAS ===" << endl;
 }
 
+#include "DataType/h/dtcliente.h"
+#include "DataType/h/dtadministra.h"
+
+// Listar datos.
+void menuListarDatos(ISistema* isistema) {
+    int opcionListar;
+    do {
+        cout << "\n========== LISTAR DATOS ==========" << endl;
+        cout << "1- Listar propietarios" << endl;
+        cout << "2- Listar clientes" << endl;
+        cout << "3- Listar inmobiliarias" << endl;
+        cout << "4- Listar administra" << endl;
+        cout << "5- Listar publicaciones" << endl;
+        cout << "6- Listar inmuebles" << endl;
+        cout << "0- Volver" << endl;
+        cout << "==================================" << endl;
+        cout << "Seleccione una opción: ";
+        opcionListar = leerEntero();
+
+        switch (opcionListar) {
+            case 1: {
+                set<dtpropietario> conjuntoPropietarios = isistema->listarPropietarios();
+                if (conjuntoPropietarios.empty()) {
+                    cout << "No hay propietarios registrados." << endl;
+                } else {
+                    cout << "\n--- LISTADO DE PROPIETARIOS ---" << endl;
+                    for (dtpropietario propietarioActual : conjuntoPropietarios) {
+                        cout << "Nickname: " << propietarioActual.getNickname() 
+                             << " | Nombre: " << propietarioActual.getNombre() 
+                             << " | Email: " << propietarioActual.getEmail() 
+                             << " | Teléfono: " << propietarioActual.getTelefono() 
+                             << " | Cuenta: " << propietarioActual.getCuenta().getBanco() << " Nro: " << propietarioActual.getCuenta().getNumero() << endl;
+                    }
+                }
+                break;
+            }
+            case 2: {
+                set<dtcliente> conjuntoClientes = isistema->listarClientes();
+                if (conjuntoClientes.empty()) {
+                    cout << "No hay clientes registrados." << endl;
+                } else {
+                    cout << "\n--- LISTADO DE CLIENTES ---" << endl;
+                    for (dtcliente clienteActual : conjuntoClientes) {
+                        cout << "Nickname: " << clienteActual.getNickname() 
+                             << " | Nombre: " << clienteActual.getNombre() 
+                             << " | Email: " << clienteActual.getEmail() 
+                             << " | Apellido: " << clienteActual.getApellido() 
+                             << " | Documento: " << clienteActual.getDocumento() << endl;
+                    }
+                }
+                break;
+            }
+            case 3: {
+                set<dtinmobiliaria> conjuntoInmobiliarias = isistema->listarInmobiliarias();
+                if (conjuntoInmobiliarias.empty()) {
+                    cout << "No hay inmobiliarias registradas." << endl;
+                } else {
+                    cout << "\n--- LISTADO DE INMOBILIARIAS ---" << endl;
+                    for (dtinmobiliaria inmobiliariaActual : conjuntoInmobiliarias) {
+                        cout << "Nickname: " << inmobiliariaActual.getNickname() 
+                             << " | Nombre: " << inmobiliariaActual.getNombre() 
+                             << " | Email: " << inmobiliariaActual.getEmail() 
+                             << " | Teléfono: " << inmobiliariaActual.getTelefono() 
+                             << " | URL: " << inmobiliariaActual.getUrl() 
+                             << " | Dirección: " << inmobiliariaActual.getDireccion().getCalle() << " " << inmobiliariaActual.getDireccion().getNumeroPuerta() << ", " << inmobiliariaActual.getDireccion().getDepartamento() << endl;
+                    }
+                }
+                break;
+            }
+            case 4: {
+                set<dtadministra> conjuntoAdministraciones = isistema->listarAdministraciones();
+                if (conjuntoAdministraciones.empty()) {
+                    cout << "No hay administraciones registradas." << endl;
+                } else {
+                    cout << "\n--- LISTADO DE ADMINISTRACIONES ---" << endl;
+                    for (dtadministra administracionActual : conjuntoAdministraciones) {
+                        cout << "Inmobiliaria: " << administracionActual.getNicknameInmobiliaria() 
+                             << " | Código Inmueble: " << administracionActual.getCodigoInmueble() 
+                             << " | Fecha Inicio: " << administracionActual.getFechaInicio() << endl;
+                    }
+                }
+                break;
+            }
+            case 5: {
+                set<dtpublicacion> conjuntoPublicaciones = isistema->listarTodasPublicaciones();
+                if (conjuntoPublicaciones.empty()) {
+                    cout << "No hay publicaciones registradas." << endl;
+                } else {
+                    cout << "\n--- LISTADO DE PUBLICACIONES ---" << endl;
+                    for (dtpublicacion publicacionActual : conjuntoPublicaciones) {
+                        cout << "Código: " << publicacionActual.getCodigo() 
+                             << " | Fecha: " << publicacionActual.getFecha() 
+                             << " | Precio: " << publicacionActual.getPrecio() 
+                             << " | Inmobiliaria: " << publicacionActual.getNombreInmobiliaria() 
+                             << " | Texto: " << publicacionActual.getTexto() << endl;
+                    }
+                }
+                break;
+            }
+            case 6: {
+                set<dtinmueble> conjuntoInmuebles = isistema->listarTodosInmuebles();
+                if (conjuntoInmuebles.empty()) {
+                    cout << "No hay inmuebles registrados." << endl;
+                } else {
+                    cout << "\n--- LISTADO DE INMUEBLES ---" << endl;
+                    for (dtinmueble inmuebleActual : conjuntoInmuebles) {
+                        cout << "Código: " << inmuebleActual.getCodigo() 
+                             << " | Superficie: " << inmuebleActual.getSuperficie() << " m2"
+                             << " | Año: " << inmuebleActual.getAnioConstruccion() 
+                             << " | Tipo: " << (inmuebleActual.getTipoInmueble() == TipoInmueble::CASA ? "Casa" : "Apartamento") 
+                             << " | Dirección: " << inmuebleActual.getDireccion().getCalle() << " " << inmuebleActual.getDireccion().getNumeroPuerta() << ", " << inmuebleActual.getDireccion().getDepartamento() << endl;
+                    }
+                }
+                break;
+            }
+            case 0:
+                break;
+            default:
+                cout << "Opción no válida." << endl;
+                break;
+        }
+        if (opcionListar != 0) {
+            cout << "\nPresione Enter para continuar...";
+            cin.ignore();
+            cin.get();
+            system("clear");
+        }
+    } while (opcionListar != 0);
+}
+
 // Menu principal.
 int main() {
     ISistema* isistema = Factory::getSistema();
@@ -353,12 +568,13 @@ int main() {
         cout << "2- Alta publicacion" << endl;
         cout << "3- Consulta publicaciones" << endl;
         cout << "4- Eliminar inmueble" << endl;
-        cout << "5- Cargar datos" << endl;
-        cout << "6- Ejecutar pruebas" << endl;
+        cout << "5- Alta administracion de propiedad" << endl;
+        cout << "6- Cargar datos" << endl;
+        cout << "7- Listar datos" << endl;
         cout << "0- Salir" << endl;
         cout << "====================================" << endl;
         cout << "Seleccione una opción: ";
-        cin >> opcion;
+        opcion = leerEntero();
         
         switch (opcion) {
             case 1:
@@ -374,6 +590,9 @@ int main() {
                 cout << "Opción 'Eliminar inmueble' no implementada aún." << endl;
                 break;
             case 5:
+                menuAltaAdministracionPropiedad(isistema);
+                break;
+            case 6:
                 isistema->cargarDatos();
                 cout << "Datos cargados con éxito." << endl;
                 cout << "\nPresione Enter para continuar...";
@@ -381,8 +600,8 @@ int main() {
                 cin.get();
                 system("clear");
                 break;
-            case 6:
-                ejecutarPruebas(isistema);
+            case 7:
+                menuListarDatos(isistema);
                 break;
             case 0:
                 cout << "Saliendo del sistema..." << endl;

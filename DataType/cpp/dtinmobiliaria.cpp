@@ -44,3 +44,7 @@ int dtinmobiliaria::getTelefono() {
 string dtinmobiliaria::getUrl() {
     return url;
 }
+
+bool dtinmobiliaria::operator<(const dtinmobiliaria& other) const {
+    return this->nickname < other.nickname;
+}

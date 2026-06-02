@@ -35,6 +35,9 @@ class Sistema : public ISistema {
     class propietario * propietarioActual;
     class inmobiliaria * inmobiliariaActual;
 
+    // Guardar inmobiliaria seleccionada temporalmente.
+    string temp_selectedInmoNickname;
+
   public:
     ~Sistema();
     static Sistema * getInstance();
@@ -59,5 +62,20 @@ class Sistema : public ISistema {
 
     // Cargar datos predeterminados en el sistema.
     void cargarDatos() override;
+
+    // Listar inmobiliarias registradas.
+    set<dtinmobiliaria> listarInmobiliarias() override;
+
+    // Seleccionar inmobiliaria por nickname.
+    set<dtinmueblepropietario> seleccionarInmobiliaria(string nickname) override;
+
+    // Registrar administracion de propiedad.
+    void altaAdministracionPropiedad(int codigoInmueble) override;
+
+    set<dtcliente> listarClientes() override;
+    set<dtadministra> listarAdministraciones() override;
+
+    set<dtpublicacion> listarTodasPublicaciones() override;
+    set<dtinmueble> listarTodosInmuebles() override;
 };
 #endif
