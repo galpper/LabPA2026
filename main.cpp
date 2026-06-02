@@ -4,23 +4,18 @@
 
 #include "Factory.h"
 #include "ISistema.h"
-#include <chrono>
-#include <thread>
+#include <unistd.h>
 #include <cstdlib>
 
 using namespace std;
 
-// aca meti todo el codigo para meter un usuario nuevo.
-// lo separe aca para no entreverar el programa principal
-// y que sea mas facil de leer cuando lo revise despues.
-void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
+// Alta de usuario.
+void menuAltaUsuario(ISistema* isistema, int &codigoInmueble) {
     cout << "\n=== ALTA DE USUARIO ===" << endl;
     string nickname, pass, nombre, email;
     cout << "Ingrese nickname: ";
     cin >> nickname;
-    
-    // me fije que la clave tenga por lo menos seis letras
-    // para cumplir con lo que pide la letra del obligatorio.
+
     do {
         cout << "Ingrese contraseña (mínimo 6 caracteres): ";
         cin >> pass;
@@ -30,8 +25,7 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
     } while (pass.length() < 6);
     
     cout << "Ingrese nombre: ";
-    cin.ignore();
-    getline(cin, nombre);
+    cin >> nombre;
     cout << "Ingrese email: ";
     cin >> email;
     
@@ -47,14 +41,10 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
         return;
     }
     
-    // me fije si el nombre de usuario ya existia antes.
-    // si ya estaba registrado, corto aca para no pisar a nadie.
-    if (sys->existeUsuario(nickname, pass, nombre, email, tipo)) {
-        // limpie la pantalla y mande a dormir el programa tres segundos
-        // asi te da el tiempo justo de leer el aviso antes de borrar.
+    if (isistema->existeUsuario(nickname, pass, nombre, email, tipo)) {
         system("clear");
         cout << "Error: Ya existe un usuario con el nickname ingresado." << endl;
-        this_thread::sleep_for(chrono::seconds(3));
+        sleep(3);
         system("clear");
         return;
     }
@@ -63,17 +53,14 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
         string apellido;
         int documento;
         cout << "Ingrese apellido: ";
-        cin.ignore();
-        getline(cin, apellido);
+        cin >> apellido;
         cout << "Ingrese documento: ";
         cin >> documento;
         
-        sys->altaCliente(apellido, documento);
-        // limpie la pantalla y mande a dormir el programa tres segundos
-        // asi te da el tiempo justo de leer el aviso antes de borrar.
+        isistema->altaCliente(apellido, documento);
         system("clear");
         cout << "Cliente dado de alta con éxito." << endl;
-        this_thread::sleep_for(chrono::seconds(3));
+        sleep(3);
         system("clear");
         
     } else if (tipo == TipoUsuario::PROPIETARIO) {
@@ -85,15 +72,12 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
         cout << "Ingrese número de cuenta bancaria: ";
         cin >> numCuenta;
         cout << "Ingrese banco: ";
-        cin.ignore();
-        getline(cin, banco);
+        cin >> banco;
         
         dtcuentabancaria cuenta(numCuenta, banco);
-        sys->altaPropietario(telefono, cuenta);
+        isistema->altaPropietario(telefono, cuenta);
         cout << "Propietario dado de alta con éxito." << endl;
         
-        // si el usuario es dueño, deje la opcion de cargar
-        // sus casas de una para no tener que dar vueltas despues.
         string agregarInm;
         cout << "Desea ingresar un inmueble para el propietario (s/n): ";
         cin >> agregarInm;
@@ -102,13 +86,11 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
             int numPuerta, anio;
             float superficie;
             cout << "Ingrese calle: ";
-            cin.ignore();
-            getline(cin, calle);
+            cin >> calle;
             cout << "Ingrese número de puerta: ";
             cin >> numPuerta;
             cout << "Ingrese departamento: ";
-            cin.ignore();
-            getline(cin, depto);
+            cin >> depto;
             cout << "Ingrese superficie (m2): ";
             cin >> superficie;
             cout << "Ingrese año de construcción: ";
@@ -132,9 +114,9 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
                 if (techoInt == 1) techo = TipoTecho::LIVIANO;
                 else if (techoInt == 2) techo = TipoTecho::DOS_AGUAS;
                 
-                sys->existeInmueble(numPuerta, calle, depto, superficie, anio, codigoInmueble, TipoInmueble::CASA);
-                sys->altaCasa(ph, techo);
-                cout << "Casa registrada con código incremental: " << codigoInmueble << endl;
+                isistema->existeInmueble(numPuerta, calle, depto, superficie, anio, codigoInmueble, TipoInmueble::CASA);
+                isistema->altaCasa(ph, techo);
+                cout << "Casa registrada con código: " << codigoInmueble << endl;
                 codigoInmueble++;
                 
             } else if (tipoInmInt == 2) {
@@ -150,8 +132,8 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
                 cout << "Ingrese gastos comunes: ";
                 cin >> gastos;
                 
-                sys->existeInmueble(numPuerta, calle, depto, superficie, anio, codigoInmueble, TipoInmueble::APARTAMENTO);
-                sys->altaApartamento(piso, asc, gastos);
+                isistema->existeInmueble(numPuerta, calle, depto, superficie, anio, codigoInmueble, TipoInmueble::APARTAMENTO);
+                isistema->altaApartamento(piso, asc, gastos);
                 cout << "Apartamento registrado con código incremental: " << codigoInmueble << endl;
                 codigoInmueble++;
             } else {
@@ -171,25 +153,21 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
         cout << "Ingrese URL del sitio web: ";
         cin >> url;
         cout << "Dirección - Ingrese calle: ";
-        cin.ignore();
-        getline(cin, calle);
+        cin >> calle;
         cout << "Dirección - Ingrese número de puerta: ";
         cin >> numPuerta;
         cout << "Dirección - Ingrese departamento: ";
-        cin.ignore();
-        getline(cin, depto);
+        cin >> depto;
         
         dtdireccion dir(numPuerta, calle, depto);
-        sys->altaInmobiliaria(dir, tel, url);
+        isistema->altaInmobiliaria(dir, tel, url);
         cout << "Inmobiliaria dada de alta con éxito." << endl;
         
-        // aca deje que elijas que dueños va a representar
-        // la inmobiliaria que acabas de guardar en el programa.
         string agregarRep;
         cout << "Desea registrar un propietario representado por la inmobiliaria (s/n): ";
         cin >> agregarRep;
         while (agregarRep == "s" || agregarRep == "S") {
-            set<dtpropietario> props = sys->listarPropietarios();
+            set<dtpropietario> props = isistema->listarPropietarios();
             if (props.empty()) {
                 cout << "No hay propietarios registrados en el sistema." << endl;
                 break;
@@ -202,7 +180,7 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
             string nickRep;
             cout << "Ingrese nickname del propietario a representar: ";
             cin >> nickRep;
-            sys->seleccionarPropietario(nickRep);
+            isistema->seleccionarPropietario(nickRep);
             cout << "Relación de representación generada con éxito." << endl;
             
             cout << "Desea agregar otro propietario representado (s/n): ";
@@ -211,44 +189,43 @@ void menuAltaUsuario(ISistema* sys, int &codigoInmueble) {
     }
 }
 
-// aca guarde los datos de prueba que ya tenias armados.
-// los deje quietos aca para poder usarlos cuando precises.
-void ejecutarPruebas(ISistema* sys) {
+// Ejecutar pruebas.
+void ejecutarPruebas(ISistema* isistema) {
     cout << "\n=== EJECUTANDO PRUEBAS PREDETERMINADAS ===" << endl;
     
     // 1. Alta de Usuarios
     cout << "\n--- 1. Alta de Usuarios ---" << endl;
     
     // Propietario 1
-    if (!sys->existeUsuario("prop1", "pass1", "Pedro", "pedro@gmail.com", TipoUsuario::PROPIETARIO)) {
+    if (!isistema->existeUsuario("prop1", "pass1", "Pedro", "pedro@gmail.com", TipoUsuario::PROPIETARIO)) {
         dtcuentabancaria cuenta1(11111, "BROU");
-        sys->altaPropietario(99111222, cuenta1);
+        isistema->altaPropietario(99111222, cuenta1);
         cout << "Propietario 'prop1' dado de alta." << endl;
     } else {
         cout << "Propietario 'prop1' ya existe." << endl;
     }
 
     // Propietario 2
-    if (!sys->existeUsuario("prop2", "pass2", "Maria", "maria@gmail.com", TipoUsuario::PROPIETARIO)) {
+    if (!isistema->existeUsuario("prop2", "pass2", "Maria", "maria@gmail.com", TipoUsuario::PROPIETARIO)) {
         dtcuentabancaria cuenta2(22222, "Santander");
-        sys->altaPropietario(99333444, cuenta2);
+        isistema->altaPropietario(99333444, cuenta2);
         cout << "Propietario 'prop2' dado de alta." << endl;
     } else {
         cout << "Propietario 'prop2' ya existe." << endl;
     }
 
     // Cliente 1
-    if (!sys->existeUsuario("cli1", "pass3", "Juan", "juan@gmail.com", TipoUsuario::CLIENTE)) {
-        sys->altaCliente("Perez", 12345678);
+    if (!isistema->existeUsuario("cli1", "pass3", "Juan", "juan@gmail.com", TipoUsuario::CLIENTE)) {
+        isistema->altaCliente("Perez", 12345678);
         cout << "Cliente 'cli1' dado de alta." << endl;
     } else {
         cout << "Cliente 'cli1' ya existe." << endl;
     }
 
     // Inmobiliaria 1
-    if (!sys->existeUsuario("inmo1", "pass4", "Inmobiliaria Montevideo", "contacto@inmomvd.com", TipoUsuario::INMOBILIARIA)) {
+    if (!isistema->existeUsuario("inmo1", "pass4", "Inmobiliaria Montevideo", "contacto@inmomvd.com", TipoUsuario::INMOBILIARIA)) {
         dtdireccion dirInmo(1234, "18 de Julio", "Montevideo");
-        sys->altaInmobiliaria(dirInmo, 24001122, "www.inmomvd.com");
+        isistema->altaInmobiliaria(dirInmo, 24001122, "www.inmomvd.com");
         cout << "Inmobiliaria 'inmo1' dada de alta." << endl;
     } else {
         cout << "Inmobiliaria 'inmo1' ya existe." << endl;
@@ -258,19 +235,19 @@ void ejecutarPruebas(ISistema* sys) {
     cout << "\n--- 2. Registrar Inmuebles para prop1 ---" << endl;
     
     // Seteamos prop1 como activo
-    sys->existeUsuario("prop1", "pass1", "Pedro", "pedro@gmail.com", TipoUsuario::PROPIETARIO);
+    isistema->existeUsuario("prop1", "pass1", "Pedro", "pedro@gmail.com", TipoUsuario::PROPIETARIO);
 
     // Registrar Casa
-    if (!sys->existeInmueble(100, "Av. Italia", "Montevideo", 150.5, 2015, 101, TipoInmueble::CASA)) {
-        sys->altaCasa(true, TipoTecho::PLANO);
+    if (!isistema->existeInmueble(100, "Av. Italia", "Montevideo", 150.5, 2015, 101, TipoInmueble::CASA)) {
+        isistema->altaCasa(true, TipoTecho::PLANO);
         cout << "Casa con codigo 101 registrada para prop1." << endl;
     } else {
         cout << "Inmueble 101 ya existe." << endl;
     }
 
     // Registrar Apartamento
-    if (!sys->existeInmueble(502, "Buxareo", "Montevideo", 75.0, 2020, 102, TipoInmueble::APARTAMENTO)) {
-        sys->altaApartamento(5, true, 8500.0);
+    if (!isistema->existeInmueble(502, "Buxareo", "Montevideo", 75.0, 2020, 102, TipoInmueble::APARTAMENTO)) {
+        isistema->altaApartamento(5, true, 8500.0);
         cout << "Apartamento con codigo 102 registrado para prop1." << endl;
     } else {
         cout << "Inmueble 102 ya existe." << endl;
@@ -280,9 +257,9 @@ void ejecutarPruebas(ISistema* sys) {
     cout << "\n--- 3. Listar Propietarios por Inmobiliaria ---" << endl;
     
     // Seteamos inmo1 como activa
-    sys->existeUsuario("inmo1", "pass4", "Inmobiliaria Montevideo", "contacto@inmomvd.com", TipoUsuario::INMOBILIARIA);
+    isistema->existeUsuario("inmo1", "pass4", "Inmobiliaria Montevideo", "contacto@inmomvd.com", TipoUsuario::INMOBILIARIA);
 
-    set<dtpropietario> props = sys->listarPropietarios();
+    set<dtpropietario> props = isistema->listarPropietarios();
     cout << "Lista de propietarios disponibles:" << endl;
     for (dtpropietario p : props) {
         cout << "- Nickname: " << p.getNickname() 
@@ -292,16 +269,15 @@ void ejecutarPruebas(ISistema* sys) {
     }
 
     cout << "\nInmobiliaria selecciona prop1..." << endl;
-    sys->seleccionarPropietario("prop1");
+    isistema->seleccionarPropietario("prop1");
     cout << "Prop1 seleccionado." << endl;
 
     cout << "\n=== PRUEBAS FINALIZADAS ===" << endl;
 }
 
-// aca arme la lista de opciones para la pantalla.
-// use opciones numericas para que decidas que queres hacer.
+// Menu principal.
 int main() {
-    ISistema* sys = Factory::getSistema();
+    ISistema* isistema = Factory::getSistema();
     int codigoInmueble = 200; 
     int opcion;
     
@@ -320,7 +296,7 @@ int main() {
         
         switch (opcion) {
             case 1:
-                menuAltaUsuario(sys, codigoInmueble);
+                menuAltaUsuario(isistema, codigoInmueble);
                 break;
             case 2:
                 cout << "Opción 'Alta publicacion' no implementada aún." << endl;
@@ -335,7 +311,7 @@ int main() {
                 cout << "Opción 'Cargar datos' no implementada aún." << endl;
                 break;
             case 6:
-                ejecutarPruebas(sys);
+                ejecutarPruebas(isistema);
                 break;
             case 0:
                 cout << "Saliendo del sistema..." << endl;
@@ -346,6 +322,6 @@ int main() {
         }
     } while (opcion != 0);
     
-    delete sys;
+    delete isistema;
     return 0;
 }

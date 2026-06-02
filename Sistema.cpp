@@ -47,18 +47,18 @@ Sistema::~Sistema() {
     delete inmuebles;
 }
 
+// Obtener instancia del sistema.
 Sistema * Sistema::getInstance() {
     if (instance == NULL)
         instance = new Sistema();
     return instance;
 }
 
+// Verificar existencia de usuario.
 bool Sistema::existeUsuario(string nickname, string pass, string nombre, string email, TipoUsuario tipoUsuario) {
     String k(nickname.c_str());
     if (usuarios->member(&k)) {
-        // aca guardamos al propietario o a la inmobiliaria en la sesion.
-        // los dejamos activos en el sistema porque el caso de uso de alta
-        // de inmueble te va a pedir saber quien es el usuario de este momento.
+        // Guardar usuario activo en sesion.
         usuario * u = (usuario*) usuarios->find(&k);
         if (u->getTipoUsuario() == TipoUsuario::PROPIETARIO) {
             propietarioActual = (propietario*) u;
@@ -75,17 +75,20 @@ bool Sistema::existeUsuario(string nickname, string pass, string nombre, string 
     return false;
 }
 
+// Registrar cliente.
 void Sistema::altaCliente(string apellido, int documento) {
     cliente * c = new cliente(temp_nickname, temp_pass, temp_nombre, temp_email, apellido, documento);
     usuarios->add(new String(temp_nickname.c_str()), c);
 }
 
+// Registrar propietario.
 void Sistema::altaPropietario(int telefono, dtcuentabancaria cuenta) {
     propietario * p = new propietario(temp_nickname, temp_pass, temp_nombre, temp_email, telefono, cuenta);
     usuarios->add(new String(temp_nickname.c_str()), p);
     propietarioActual = p;
 }
 
+// Registrar inmobiliaria.
 void Sistema::altaInmobiliaria(dtdireccion direccion, int telefono, string url) {
     class direccion d(direccion.getCalle(), direccion.getNumeroPuerta(), direccion.getDepartamento());
     inmobiliaria * inmo = new inmobiliaria(temp_nickname, temp_pass, temp_nombre, temp_email, d, telefono, url);
@@ -93,6 +96,7 @@ void Sistema::altaInmobiliaria(dtdireccion direccion, int telefono, string url) 
     inmobiliariaActual = inmo;
 }
 
+// Verificar existencia de inmueble.
 bool Sistema::existeInmueble(int numPuerta, string calle, string departamento, float superficie, int anioConstruccion, int codigo, TipoInmueble tipoInmueble) {
     Integer k(codigo);
     if (inmuebles->member(&k)) {
@@ -108,6 +112,7 @@ bool Sistema::existeInmueble(int numPuerta, string calle, string departamento, f
     return false;
 }
 
+// Registrar casa.
 void Sistema::altaCasa(bool horizontal, TipoTecho tipoTecho) {
     class direccion dir(temp_calle, temp_numPuerta, temp_departamento);
     casa * c = new casa(dir, temp_superficie, temp_anioConstruccion, temp_codigo, horizontal, tipoTecho);
@@ -117,6 +122,7 @@ void Sistema::altaCasa(bool horizontal, TipoTecho tipoTecho) {
     }
 }
 
+// Registrar apartamento.
 void Sistema::altaApartamento(int numeroPiso, bool ascensor, float gastosComunes) {
     class direccion dir(temp_calle, temp_numPuerta, temp_departamento);
     apartamento * a = new apartamento(dir, temp_superficie, temp_anioConstruccion, temp_codigo, numeroPiso, ascensor, gastosComunes);
@@ -126,6 +132,7 @@ void Sistema::altaApartamento(int numeroPiso, bool ascensor, float gastosComunes
     }
 }
 
+// Listar propietarios.
 set<dtpropietario> Sistema::listarPropietarios() {
     set<dtpropietario> res;
     IIterator * it = usuarios->getIterator();
@@ -142,6 +149,7 @@ set<dtpropietario> Sistema::listarPropietarios() {
     return res;
 }
 
+// Seleccionar propietario para representar.
 void Sistema::seleccionarPropietario(string nickname) {
     String k(nickname.c_str());
     usuario * u = (usuario*) usuarios->find(&k);
