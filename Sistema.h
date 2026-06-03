@@ -35,6 +35,10 @@ class Sistema : public ISistema {
     class propietario * propietarioActual;
     class inmobiliaria * inmobiliariaActual;
 
+  
+    int ultimoIdPublicacion;
+    DTFecha fechaActual;
+
   public:
     ~Sistema();
     static Sistema * getInstance();
@@ -53,5 +57,9 @@ class Sistema : public ISistema {
 
     set<dtinmobiliaria> listarInmobiliarias() override;
     set<dtinmueble> seleccionarInmueble(string nickname) override;
+    bool altaPublicacion(int codigoInmueble, TipoPublicacion tipo, string texto, float precio) override;
+    void ingresarDatosPublicacion(TipoPublicacion tipo, string texto, float precio) override;
+    int generarIdPublicacion() override;
+    DTFecha obtenerFecha() override;
 };
 #endif

@@ -7,6 +7,7 @@
 #include "Clases/h/TipoUsuario.h"
 #include "Clases/h/TipoInmueble.h"
 #include "Clases/h/TipoTecho.h"
+#include "Clases/h/TipoPublicacion.h"
 #include "Clases/h/administracionpropiedad.h"
 #include "DataType/h/dtcuentabancaria.h"
 #include "DataType/h/dtdireccion.h"
@@ -34,6 +35,9 @@ class ISistema {
 
         virtual set<dtinmobiliaria> listarInmobiliarias() = 0;
         virtual set<dtinmueble> seleccionarInmueble(string nickname) = 0;
-        //virtual bool altaPublicacion(string nickname, int codigoInmueble, TipoPublicacion tipo, string texto, float precio);
+        virtual bool altaPublicacion(int codigoInmueble, TipoPublicacion tipo, string texto, float precio) = 0;
+        virtual void ingresarDatosPublicacion(TipoPublicacion tipo, string texto, float precio) = 0;
+        virtual int generarIdPublicacion() = 0;
+        virtual DTFecha obtenerFecha() = 0;
 };
 #endif

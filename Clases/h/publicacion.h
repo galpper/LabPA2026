@@ -6,13 +6,13 @@
 #include "../../ICollection/interfaces/ICollection.h"
 #include "TipoPublicacion.h"
 #include "inmueble.h"
-#include "inmobiliaria.h"
+#include "DataType/h/DTFecha.h"
 
 using namespace std;
-
+class inmobiliaria;
 class publicacion : public ICollectible {
 private:
-    string fecha;
+    DTFecha fecha;
     TipoPublicacion tipo;
     string texto;
     int idPublicacion;
@@ -25,12 +25,12 @@ private:
 public:
     publicacion();
     virtual ~publicacion();
-    publicacion(string fecha, TipoPublicacion tipo, string texto, int idPublicacion, float precio, bool activa, inmueble* inmueblePublicado, inmobiliaria* inmobiliariaPropietaria);
+    publicacion(DTFecha fecha, TipoPublicacion tipo, string texto, int idPublicacion, float precio, bool activa, inmueble* inmueblePublicado, inmobiliaria* inmobiliariaPropietaria);
     float getPrecio();
     string getTexto();
     bool getActiva();
     TipoPublicacion getTipo();
-    string getFecha();
+    DTFecha getFecha();
     int getIdPublicacion();
     inmueble* getInmueble();
     inmobiliaria* getInmobiliaria();

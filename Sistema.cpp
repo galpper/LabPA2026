@@ -182,9 +182,11 @@ set<dtinmueble> Sistema::seleccionarInmueble(string nickname){
     set<dtinmueble> res;
     String k(nickname.c_str());
     usuario * u = (usuario*) usuarios->find(&k);
+
     if (u != nullptr && u->getTipoUsuario() == TipoUsuario::INMOBILIARIA){
-        inmobiliaria* i = (inmobiliaria*) u;
-        IIterator * it = i->getAdministraciones()->getIterator();
+        inmobiliariaActual = (inmobiliaria*) u;
+        IIterator * it = inmobiliariaActual->getAdministraciones()->getIterator();
+
         while(it->hasCurrent()){
             administracionpropiedad * ap = (administracionpropiedad*) it->getCurrent();
             res.insert(ap->armarDTInmueble());
@@ -194,4 +196,23 @@ set<dtinmueble> Sistema::seleccionarInmueble(string nickname){
         delete it;
     }
     return res;
+}
+
+bool Sistema::altaPublicacion(int codigoInmueble, TipoPublicacion tipo, string texto, float precio){
+    DTFecha fechaActual = obtenerFecha();
+
+    int idPublicacion = ++ultimoIdPublicacion;
+
+    return inmobiliariaActual->crearPublicacion(
+        codigoInmueble,
+        tipo,
+        texto,
+        precio,
+        fechaActual,
+        idPublicacion
+    );
+}
+
+int Sistema::generarIdPublicacion() {
+    return ++ultimoIdPublicacion;
 }

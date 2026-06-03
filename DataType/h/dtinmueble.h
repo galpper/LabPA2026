@@ -30,4 +30,6 @@ public:
     int getAnioConstruccion();
     int getCodigo();
     TipoInmueble getTipoInmueble();
+
+    bool operator<(const dtinmueble& otro) const;
 };

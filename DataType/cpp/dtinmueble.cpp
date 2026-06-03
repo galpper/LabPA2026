@@ -42,3 +42,7 @@ int dtinmueble::getCodigo() {
 TipoInmueble dtinmueble::getTipoInmueble() {
     return tipoInmueble;
 }
+
+bool dtinmueble::operator<(const dtinmueble& otro) const {
+    return this->codigo < otro.codigo;
+}

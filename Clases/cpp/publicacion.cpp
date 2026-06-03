@@ -4,7 +4,7 @@
 publicacion::publicacion() {
     agendas = new List();
 }
-publicacion::publicacion(string fecha, TipoPublicacion tipo, string texto, int idPublicacion, float precio, bool activa, inmueble* inmueblePublicado, inmobiliaria* inmobiliariaPropietaria) {
+publicacion::publicacion(DTFecha fecha, TipoPublicacion tipo, string texto, int idPublicacion, float precio, bool activa, inmueble* inmueblePublicado, inmobiliaria* inmobiliariaPropietaria) {
     this->fecha = fecha;
     this->tipo = tipo;
     this->texto = texto;
@@ -40,7 +40,7 @@ TipoPublicacion publicacion::getTipo() {
     return tipo;
 }
 
-string publicacion::getFecha() {
+DTFecha publicacion::getFecha() {
     return fecha;
 }
 

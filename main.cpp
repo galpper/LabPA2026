@@ -272,8 +272,118 @@ void ejecutarPruebas(ISistema* isistema) {
     isistema->seleccionarPropietario("prop1");
     cout << "Prop1 seleccionado." << endl;
 
-    cout << "\n=== PRUEBAS FINALIZADAS ===" << endl;
+    // ---------------------------------------------------------------------------------------------------------
+
+    // 4. Alta de Publicación
+    cout << "\n--- 4. Alta de Publicacion ---" << endl;
+
+    // La inmobiliaria debe administrar el inmueble previamente
+    // (adaptar según cómo implementaron la administración)
+
+    set<dtinmueble> inmuebles = sys->seleccionarInmueble("inmo1");
+
+    cout << "Inmuebles administrados por inmo1:" << endl;
+    for(auto dt : inmuebles){
+        cout << "Codigo: " << dt.getCodigo() << endl;
+    }
+
+    bool ok = sys->altaPublicacion(
+        101,
+        TipoPublicacion::VENTA,
+        "Hermosa casa en excelente estado",
+        250000
+    );
+
+    if(ok){
+        cout << "Publicacion creada correctamente." << endl;
+    }else{
+        cout << "No fue posible crear la publicacion." << endl;
+    }
+        cout << "\n=== PRUEBAS FINALIZADAS ===" << endl;
 }
+
+    void menuAltaPublicacion(ISistema* sys){
+
+        set<dtinmobiliaria> inmobiliarias =
+            sys->listarInmobiliarias();
+
+        if(inmobiliarias.empty()){
+            cout << "No existen inmobiliarias registradas." << endl;
+            return;
+        }
+
+        cout << "\n=== INMOBILIARIAS ===" << endl;
+
+        for(auto dt : inmobiliarias){
+            cout << dt.getNickname() << " - " << dt.getNombre() << endl;
+        }
+
+        string nickname;
+
+        cout << "\nIngrese nickname de la inmobiliaria: ";
+        cin >> nickname;
+
+        set<dtinmueble> inmuebles =
+            sys->seleccionarInmueble(nickname);
+
+        if(inmuebles.empty()){
+            cout << "La inmobiliaria no administra inmuebles." << endl;
+            return;
+        }
+
+        cout << "\n=== INMUEBLES ===" << endl;
+
+        for(auto dt : inmuebles){
+            cout << "Codigo: " << dt.getCodigo() << endl;
+        }
+
+        int codigo;
+        int tipoInt;
+        string texto;
+        float precio;
+
+        cout << "\nCodigo inmueble: ";
+        cin >> codigo;
+
+        cout << "Tipo (1-Venta, 2-Alquiler): ";
+        cin >> tipoInt;
+
+        TipoPublicacion tipo;
+
+        if(tipoInt == 1)
+            tipo = TipoPublicacion::VENTA;
+        else
+            tipo = TipoPublicacion::ALQUILER;
+
+        cin.ignore();
+
+        cout << "Texto: ";
+        getline(cin, texto);
+
+        cout << "Precio: ";
+        cin >> precio;
+
+        bool ok =
+            sys->altaPublicacion(
+                codigo,
+                tipo,
+                texto,
+                precio
+            );
+
+        if(ok)
+            cout << "Publicacion creada correctamente." << endl;
+        else
+            cout << "Ya existe una publicacion para ese tipo y fecha." << endl;
+    }
+
+
+
+
+
+
+
+
 
 // Menu principal.
 int main() {
@@ -299,7 +409,7 @@ int main() {
                 menuAltaUsuario(isistema, codigoInmueble);
                 break;
             case 2:
-                cout << "Opción 'Alta publicacion' no implementada aún." << endl;
+                menuAltaPublicacion(sys);
                 break;
             case 3:
                 cout << "Opción 'Consulta publicaciones' no implementada aún." << endl;

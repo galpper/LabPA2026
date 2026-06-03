@@ -31,4 +31,7 @@ public:
     dtdireccion getDireccion();
     int getTelefono();
     string getUrl();
+
+    bool operator<(const dtinmobiliaria& otro) const;
+
 };
