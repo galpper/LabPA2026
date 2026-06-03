@@ -15,18 +15,14 @@ class Sistema : public ISistema {
     IDictionary * usuarios;
     IDictionary * inmuebles;
 
-    // aca nos guardamos de forma temporal los datos del nuevo usuario.
-    // los precisamos en la clase porque el alta se ejecuta en dos pasos
-    // y no podemos perder la informacion que ya validaste en el primero.
+    // Guardar datos temporales del usuario.
     string temp_nickname;
     string temp_pass;
     string temp_nombre;
     string temp_email;
     TipoUsuario temp_tipoUsuario;
 
-    // aca dejamos guardados temporalmente los datos del inmueble.
-    // nos sirve para cuando el usuario decida si es casa o apartamento,
-    // asi podemos construir la instancia con la clase que corresponde.
+    // Guardar datos temporales del inmueble.
     int temp_numPuerta;
     string temp_calle;
     string temp_departamento;
@@ -35,9 +31,7 @@ class Sistema : public ISistema {
     int temp_codigo;
     TipoInmueble temp_tipoInmueble;
 
-    // aca recordamos al propietario o la inmobiliaria que estan activos.
-    // los guardamos asi los tenes a mano para asociarles nuevos inmuebles
-    // directamente, sin tener que buscarlos en el diccionario cada vez.
+    // Guardar usuarios activos en sesion.
     class propietario * propietarioActual;
     class inmobiliaria * inmobiliariaActual;
 
