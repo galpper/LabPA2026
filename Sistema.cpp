@@ -288,22 +288,22 @@ void Sistema::cargarDatos() {
     inmo2->getPropietariosRepresentados()->add(p3);
     inmo3->getPropietariosRepresentados()->add(p4);
 
-    administracionpropiedad* admin1 = new administracionpropiedad("02/06/2026", casa1, inmo1);
-    administracionpropiedad* admin2 = new administracionpropiedad("02/06/2026", apto1, inmo1);
-    administracionpropiedad* admin3 = new administracionpropiedad("02/06/2026", casa2, inmo2);
-    administracionpropiedad* admin4 = new administracionpropiedad("02/06/2026", apto2, inmo3);
+    administracionpropiedad* admin1 = new administracionpropiedad("2/6/2026", casa1, inmo1);
+    administracionpropiedad* admin2 = new administracionpropiedad("2/6/2026", apto1, inmo1);
+    administracionpropiedad* admin3 = new administracionpropiedad("2/6/2026", casa2, inmo2);
+    administracionpropiedad* admin4 = new administracionpropiedad("2/6/2026", apto2, inmo3);
     inmo1->getAdministraciones()->add(admin1);
     inmo1->getAdministraciones()->add(admin2);
     inmo2->getAdministraciones()->add(admin3);
     inmo3->getAdministraciones()->add(admin4);
 
     // 6. Publicaciones
-    publicacion* pub1 = new publicacion("02/06/2026", TipoPublicacion::VENTA, "Hermosa casa en Av. Italia", 301, 150000.0, true, casa1, inmo1);
-    publicacion* pub2 = new publicacion("02/06/2026", TipoPublicacion::ALQUILER, "Lindo apto en Buxareo", 302, 25000.0, true, apto1, inmo1);
-    publicacion* pub3 = new publicacion("02/06/2026", TipoPublicacion::ALQUILER, "Casa espaciosa para alquilar", 303, 120000.0, true, casa1, inmo1);
-    publicacion* pub4 = new publicacion("02/06/2026", TipoPublicacion::VENTA, "Apartamento economico venta", 304, 35000.0, true, apto1, inmo1);
-    publicacion* pub5 = new publicacion("02/06/2026", TipoPublicacion::VENTA, "Espectacular propiedad Agraciada", 305, 280000.0, true, casa2, inmo2);
-    publicacion* pub6 = new publicacion("02/06/2026", TipoPublicacion::ALQUILER, "Apartamento luminoso Ellauri", 306, 45000.0, true, apto2, inmo3);
+    publicacion* pub1 = new publicacion("2/6/2026", TipoPublicacion::VENTA, "Hermosa casa en Av. Italia", 301, 150000.0, true, casa1, inmo1);
+    publicacion* pub2 = new publicacion("2/6/2026", TipoPublicacion::ALQUILER, "Lindo apto en Buxareo", 302, 25000.0, true, apto1, inmo1);
+    publicacion* pub3 = new publicacion("2/6/2026", TipoPublicacion::ALQUILER, "Casa espaciosa para alquilar", 303, 120000.0, true, casa1, inmo1);
+    publicacion* pub4 = new publicacion("2/6/2026", TipoPublicacion::VENTA, "Apartamento economico venta", 304, 35000.0, true, apto1, inmo1);
+    publicacion* pub5 = new publicacion("2/6/2026", TipoPublicacion::VENTA, "Espectacular propiedad Agraciada", 305, 280000.0, true, casa2, inmo2);
+    publicacion* pub6 = new publicacion("2/6/2026", TipoPublicacion::ALQUILER, "Apartamento luminoso Ellauri", 306, 45000.0, true, apto2, inmo3);
     
     admin1->getPublicaciones()->add(pub1);
     admin1->getPublicaciones()->add(pub3);
@@ -366,6 +366,17 @@ void Sistema::altaAdministracionPropiedad(int codigoInmueble) {
     if (usuarioEncontrado != nullptr && usuarioEncontrado->getTipoUsuario() == TipoUsuario::INMOBILIARIA) {
         inmobiliaria * inmobiliariaActual = (inmobiliaria*) usuarioEncontrado;
         
+        IIterator * iteradorAdministraciones = inmobiliariaActual->getAdministraciones()->getIterator();
+        while (iteradorAdministraciones->hasCurrent()) {
+            administracionpropiedad * administracionActual = (administracionpropiedad*) iteradorAdministraciones->getCurrent();
+            if (administracionActual->getInmueble()->getCodigo() == codigoInmueble) {
+                delete iteradorAdministraciones;
+                return;
+            }
+            iteradorAdministraciones->next();
+        }
+        delete iteradorAdministraciones;
+
         Integer claveInmueble(codigoInmueble);
         inmueble * inmuebleEncontrado = (inmueble*) inmuebles->find(&claveInmueble);
         if (inmuebleEncontrado != nullptr) {
