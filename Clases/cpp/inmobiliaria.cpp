@@ -1,5 +1,6 @@
 #include "../h/inmobiliaria.h"
 #include "../../ICollection/collections/List.h"
+#include "../h/administracionpropiedad.h"
 
 inmobiliaria::inmobiliaria() {
     propietariosRepresentados = new List();
@@ -34,10 +35,6 @@ ICollection* inmobiliaria::getPropietariosRepresentados() {
 ICollection* inmobiliaria::getAdministraciones() {
     return administraciones;
 }
-inmobiliaria::~inmobiliaria() {
-    delete propietariosRepresentados;
-    delete administraciones;
-}
 
 bool inmobiliaria::crearPublicacion(int codigoInmueble, TipoPublicacion tipo, string texto, float precio, DTFecha fecha, int idPublicacion){
     IIterator* it = administraciones->getIterator();
@@ -61,4 +58,22 @@ bool inmobiliaria::crearPublicacion(int codigoInmueble, TipoPublicacion tipo, st
 
     delete it;
     return false;
+}
+
+set<dtpublicacion> inmobiliaria::listarPublicaciones(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm) {
+    set<dtpublicacion> res;
+    IIterator* it = administraciones->getIterator();
+    while (it->hasCurrent()) {
+        administracionpropiedad* admin = (administracionpropiedad*) it->getCurrent();
+        set<dtpublicacion> matching = admin->armarDTPublicacion(tipoPub, precioMin, precioMax, tipoInm);
+        res.insert(matching.begin(), matching.end());
+        it->next();
+    }
+    delete it;
+    return res;
+}
+
+inmobiliaria::~inmobiliaria() {
+    delete propietariosRepresentados;
+    delete administraciones;
 }

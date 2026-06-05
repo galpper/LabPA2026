@@ -15,6 +15,20 @@ publicacion::publicacion(DTFecha fecha, TipoPublicacion tipo, string texto, int 
     this->inmobiliariaPropietaria = inmobiliariaPropietaria;
     agendas = new List();
 }
+publicacion::publicacion(string fecha, TipoPublicacion tipo, string texto, int idPublicacion, float precio, bool activa, inmueble* inmueblePublicado, inmobiliaria* inmobiliariaPropietaria) {
+    // Parser simple dia/mes/anio
+    int d = 0, m = 0, a = 0;
+    sscanf(fecha.c_str(), "%d/%d/%d", &d, &m, &a);
+    this->fecha = DTFecha(d, m, a);
+    this->tipo = tipo;
+    this->texto = texto;
+    this->idPublicacion = idPublicacion;
+    this->precio = precio;
+    this->activa = activa;
+    this->inmueblePublicado = inmueblePublicado;
+    this->inmobiliariaPropietaria = inmobiliariaPropietaria;
+    agendas = new List();
+}
 
 int publicacion::getIdPublicacion() {
     return idPublicacion;

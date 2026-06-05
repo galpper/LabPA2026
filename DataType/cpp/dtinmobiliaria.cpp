@@ -50,6 +50,6 @@ string dtinmobiliaria::getUrl() {
     return url;
 }
 
-bool dtinmobiliaria::operator<(const dtinmobiliaria& otro) const {
-    return this->nickname < otro.nickname; 
+bool dtinmobiliaria::operator<(const dtinmobiliaria& other) const {
+    return this->nickname < other.nickname;
 }

@@ -14,6 +14,10 @@
 #include "DataType/h/dtpropietario.h"
 #include "DataType/h/dtinmobiliaria.h"
 #include "DataType/h/dtinmueble.h"
+#include "DataType/h/dtpublicacion.h"
+#include "DataType/h/dtinmueblepropietario.h"
+#include "DataType/h/dtcliente.h"
+#include "DataType/h/dtadministra.h"
 
 using namespace std;
 
@@ -39,5 +43,18 @@ class ISistema {
         virtual void ingresarDatosPublicacion(TipoPublicacion tipo, string texto, float precio) = 0;
         virtual int generarIdPublicacion() = 0;
         virtual DTFecha obtenerFecha() = 0;
+        
+        virtual set<dtpublicacion> listarPublicaciones(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm) = 0;
+        virtual dtinmueble seleccionarPublicacion(int codigo) = 0;
+        virtual void cargarDatos() = 0;
+
+        virtual set<dtinmueblepropietario> seleccionarInmobiliaria(string nickname) = 0;
+        virtual void altaAdministracionPropiedad(int codigoInmueble) = 0;
+
+        virtual set<dtcliente> listarClientes() = 0;
+        virtual set<dtadministra> listarAdministraciones() = 0;
+
+        virtual set<dtpublicacion> listarTodasPublicaciones() = 0;
+        virtual set<dtinmueble> listarTodosInmuebles() = 0;
 };
 #endif

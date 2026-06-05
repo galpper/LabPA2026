@@ -1,15 +1,19 @@
 #pragma once
 
 #include <string>
+#include <set>
 #include "inmueble.h"
-#include "publicacion.h"
+class inmobiliaria;
 #include "../../ICollection/interfaces/ICollectible.h"
-#include "DataType/h/dtinmueble.h"
-#include "../../ICollection/collections/List.h"
-#include "DataType/h/DTFecha.h"
+#include "../../ICollection/interfaces/ICollection.h"
+#include "../../DataType/h/dtpublicacion.h"
+#include "TipoPublicacion.h"
+#include "TipoInmueble.h"
+#include "../../DataType/h/dtinmueble.h"
+#include "../../DataType/h/DTFecha.h"
 
 using namespace std;
-class inmobiliaria;
+
 class administracionpropiedad : public ICollectible {
 
 private:
@@ -31,7 +35,7 @@ public:
     bool existePublicacion(TipoPublicacion tipo, DTFecha fecha);
     void crearPublicacion(TipoPublicacion tipo, string texto, float precio, DTFecha fecha, int idPublicacion);
     bool existeInmueble(int codigoInmueble);
-
+    set<dtpublicacion> armarDTPublicacion(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm);
 
     virtual ~administracionpropiedad();
 };

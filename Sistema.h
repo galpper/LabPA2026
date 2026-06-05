@@ -35,9 +35,10 @@ class Sistema : public ISistema {
     class propietario * propietarioActual;
     class inmobiliaria * inmobiliariaActual;
 
-  
     int ultimoIdPublicacion;
     DTFecha fechaActual;
+    // Guardar inmobiliaria seleccionada temporalmente.
+    string temp_selectedInmoNickname;
 
   public:
     ~Sistema();
@@ -61,5 +62,26 @@ class Sistema : public ISistema {
     void ingresarDatosPublicacion(TipoPublicacion tipo, string texto, float precio) override;
     int generarIdPublicacion() override;
     DTFecha obtenerFecha() override;
+
+    // Listar publicaciones filtradas.
+    set<dtpublicacion> listarPublicaciones(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm) override;
+
+    // Seleccionar publicacion y retornar su inmueble.
+    dtinmueble seleccionarPublicacion(int codigo) override;
+
+    // Cargar datos predeterminados en el sistema.
+    void cargarDatos() override;
+
+    // Seleccionar inmobiliaria por nickname.
+    set<dtinmueblepropietario> seleccionarInmobiliaria(string nickname) override;
+
+    // Registrar administracion de propiedad.
+    void altaAdministracionPropiedad(int codigoInmueble) override;
+
+    set<dtcliente> listarClientes() override;
+    set<dtadministra> listarAdministraciones() override;
+
+    set<dtpublicacion> listarTodasPublicaciones() override;
+    set<dtinmueble> listarTodosInmuebles() override;
 };
 #endif

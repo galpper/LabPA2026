@@ -1,13 +1,20 @@
 #include "../h/administracionpropiedad.h"
+#include "../../ICollection/collections/List.h"
+#include "../h/publicacion.h"
+#include "../h/inmobiliaria.h"
 
-administracionpropiedad::administracionpropiedad() {}
+administracionpropiedad::administracionpropiedad() {
+    this->fechaInicio = "";
+    this->inm = nullptr;
+    this->inmob = nullptr;
+    this->publicaciones = new List();
+}
 
 administracionpropiedad::administracionpropiedad(string fechaInicio, inmueble* inm, inmobiliaria* inmob) {
     this->fechaInicio = fechaInicio;
     this->inm = inm;
     this->inmob = inmob;
-
-    publicaciones = new List();
+    this->publicaciones = new List();
 }
 
 string administracionpropiedad::getFechaInicio() {
@@ -22,28 +29,25 @@ inmobiliaria* administracionpropiedad::getInmobiliaria() {
     return inmob;
 }
 
+ICollection* administracionpropiedad::getPublicaciones() {
+    return publicaciones;
+}
+
 dtinmueble administracionpropiedad::armarDTInmueble() {
-
-    inmueble* inm = getInmueble();
-
+    inmueble* inmVal = getInmueble();
     dtdireccion dtDir(
-        inm->getDireccion().getNumero(),
-        inm->getDireccion().getCalle(),
-        inm->getDireccion().getDepartamento()
+        inmVal->getDireccion().getNumero(),
+        inmVal->getDireccion().getCalle(),
+        inmVal->getDireccion().getDepartamento()
     );
-
     return dtinmueble(
         fechaInicio,
         dtDir,
-        inm->getSuperficie(),
-        inm->getAnioConstruccion(),
-        inm->getCodigo(),
-        inm->getTipoInmueble()
+        inmVal->getSuperficie(),
+        inmVal->getAnioConstruccion(),
+        inmVal->getCodigo(),
+        inmVal->getTipoInmueble()
     );
-}
-
-ICollection* administracionpropiedad::getPublicaciones(){
-    return publicaciones;
 }
 
 bool administracionpropiedad::existeInmueble(int codigoInmueble){
@@ -52,17 +56,14 @@ bool administracionpropiedad::existeInmueble(int codigoInmueble){
 
 bool administracionpropiedad::existePublicacion(TipoPublicacion tipo, DTFecha fecha){
     IIterator* it = publicaciones->getIterator();
-
     while(it->hasCurrent()){
         publicacion* p = (publicacion*) it->getCurrent();
-
         if(p->getTipo() == tipo && p->getFecha() == fecha){
             delete it;
             return true;
         }
         it->next();
     }
-
     delete it;
     return false;
 }
@@ -78,8 +79,37 @@ void administracionpropiedad::crearPublicacion(TipoPublicacion tipo, string text
         inm,
         inmob
     );
-
     publicaciones->add(p);
 }
 
-administracionpropiedad::~administracionpropiedad() {}
+set<dtpublicacion> administracionpropiedad::armarDTPublicacion(TipoPublicacion tipoPub, float precioMin, float precioMax, TipoInmueble tipoInm) {
+    set<dtpublicacion> res;
+    bool ok = (tipoInm == TipoInmueble::AMBOS) || (tipoInm == inm->getTipoInmueble());
+    if (!ok) {
+        return res;
+    }
+    IIterator* it = publicaciones->getIterator();
+    while (it->hasCurrent()) {
+        publicacion* p = (publicacion*) it->getCurrent();
+        if (p->getActiva() && p->getTipo() == tipoPub && p->getPrecio() >= precioMin && p->getPrecio() <= precioMax) {
+            DTFecha f = p->getFecha();
+            string fStr = to_string(f.getDia()) + "/" + to_string(f.getMes()) + "/" + to_string(f.getAnio());
+            dtpublicacion dt(p->getIdPublicacion(), fStr, p->getTexto(), p->getPrecio(), inmob->getNombre());
+            res.insert(dt);
+        }
+        it->next();
+    }
+    delete it;
+    return res;
+}
+
+administracionpropiedad::~administracionpropiedad() {
+    IIterator* it = publicaciones->getIterator();
+    while (it->hasCurrent()) {
+        ICollectible* p = it->getCurrent();
+        delete p;
+        it->next();
+    }
+    delete it;
+    delete publicaciones;
+}

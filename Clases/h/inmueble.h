@@ -5,7 +5,7 @@
 #include "../../ICollection/interfaces/ICollectible.h"
 #include "direccion.h"
 #include "TipoInmueble.h"
-#include "DataType/h/dtinmueble.h"
+#include "../../DataType/h/dtinmueble.h"
 
 class inmueble : public ICollectible {
 protected:
