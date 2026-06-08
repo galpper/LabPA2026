@@ -13,6 +13,7 @@
 #include "Clases/h/apartamento.h"
 #include "Clases/h/administracionpropiedad.h"
 #include "Clases/h/publicacion.h"
+#include "Clases/h/agenda.h"
 
 // ICollection
 #include "ICollection/collections/OrderedDictionary.h"
@@ -522,4 +523,85 @@ set<dtinmueble> Sistema::listarTodosInmuebles() {
     }
     delete iteradorInmuebles;
     return conjuntoInmuebles;
+}
+set<dtinmueble> Sistema::listarTodosInmueblesConPropietario() {
+    set<dtinmueble> conjuntoInmuebles;
+    
+    IIterator * iteradorPropietarios = usuarios->getIterator();
+    while (iteradorPropietarios->hasCurrent()) {
+        usuario * usuarioActual = (usuario*) iteradorPropietarios->getCurrent();
+        if (usuarioActual->getTipoUsuario() == TipoUsuario::PROPIETARIO) {
+            propietario * propietarioActual = (propietario*) usuarioActual;
+            IIterator * iteradorInmuebles = propietarioActual->getInmuebles()->getIterator();
+            while (iteradorInmuebles->hasCurrent()) {
+                inmueble * inmuebleActual = (inmueble*) iteradorInmuebles->getCurrent();
+                dtdireccion direccionDT(inmuebleActual->getDireccion().getNumero(), inmuebleActual->getDireccion().getCalle(), inmuebleActual->getDireccion().getDepartamento());
+                dtinmueble datosInmueble("", direccionDT, inmuebleActual->getSuperficie(), inmuebleActual->getAnioConstruccion(), inmuebleActual->getCodigo(), inmuebleActual->getTipoInmueble());
+                conjuntoInmuebles.insert(datosInmueble);
+                iteradorInmuebles->next();
+            }
+            delete iteradorInmuebles;
+        }
+        iteradorPropietarios->next();
+    }
+    delete iteradorPropietarios;
+    return conjuntoInmuebles;
+}
+
+
+// Eliminar inmueble.
+void Sistema::eliminarInmueble(int codigoInmueble) {
+    Integer claveInmueble(codigoInmueble);
+    inmueble * inmuebleAEliminar = (inmueble*) inmuebles->find(&claveInmueble);
+    
+    if (inmuebleAEliminar == nullptr) {
+        return;
+    }
+    
+    IIterator * iteradorUsuarios = usuarios->getIterator();
+    administracionpropiedad * administracionAEliminar = nullptr;
+    inmobiliaria * inmobiliariaConAdmin = nullptr;
+    
+    while (iteradorUsuarios->hasCurrent()) {
+        usuario * usuarioActual = (usuario*) iteradorUsuarios->getCurrent();
+        if (usuarioActual->getTipoUsuario() == TipoUsuario::INMOBILIARIA) {
+            inmobiliaria * inmobiliariaActual = (inmobiliaria*) usuarioActual;
+            IIterator * iteradorAdministraciones = inmobiliariaActual->getAdministraciones()->getIterator();
+            while (iteradorAdministraciones->hasCurrent()) {
+                administracionpropiedad * administracionActual = (administracionpropiedad*) iteradorAdministraciones->getCurrent();
+                if (administracionActual->getInmueble()->getCodigo() == codigoInmueble) {
+                    administracionAEliminar = administracionActual;
+                    inmobiliariaConAdmin = inmobiliariaActual;
+                    break;
+                }
+                iteradorAdministraciones->next();
+            }
+            delete iteradorAdministraciones;
+            if (administracionAEliminar != nullptr) break;
+        }
+        iteradorUsuarios->next();
+    }
+    delete iteradorUsuarios;
+    
+    if (administracionAEliminar != nullptr) {
+        if (inmobiliariaConAdmin != nullptr) {
+            inmobiliariaConAdmin->getAdministraciones()->remove((ICollectible*)administracionAEliminar);
+        }
+        delete administracionAEliminar;
+    }
+    
+    inmuebles->remove(&claveInmueble);
+    
+    IIterator * iteradorPropietarios = usuarios->getIterator();
+    while (iteradorPropietarios->hasCurrent()) {
+        usuario * usuarioActual = (usuario*) iteradorPropietarios->getCurrent();
+        if (usuarioActual->getTipoUsuario() == TipoUsuario::PROPIETARIO) {
+            propietario * propietarioActual = (propietario*) usuarioActual;
+            propietarioActual->getInmuebles()->remove((ICollectible*)inmuebleAEliminar);
+        }
+        iteradorPropietarios->next();
+    }
+    delete iteradorPropietarios;
+    
+    delete inmuebleAEliminar;
 }

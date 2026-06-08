@@ -74,6 +74,13 @@ set<dtpublicacion> inmobiliaria::listarPublicaciones(TipoPublicacion tipoPub, fl
 }
 
 inmobiliaria::~inmobiliaria() {
-    delete propietariosRepresentados;
+    IIterator * it = administraciones->getIterator();
+    while (it->hasCurrent()) {
+        ICollectible * admin = it->getCurrent();
+        it->next();
+        delete admin;
+    }
+    delete it;
     delete administraciones;
+    delete propietariosRepresentados;
 }

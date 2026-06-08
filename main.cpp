@@ -288,6 +288,64 @@ void menuConsultaPublicaciones(ISistema* isistema) {
     system("clear");
 }
 
+// Eliminar inmueble.
+void menuEliminarInmueble(ISistema* isistema) {
+    cout << "\n=== ELIMINAR INMUEBLE ===" << endl;
+
+    set<dtinmueble> inmuebles = isistema->listarTodosInmueblesConPropietario();
+
+    if (inmuebles.empty()) {
+        cout << "No hay inmuebles registrados en el sistema." << endl;
+        return;
+    }
+
+    cout << "\nInmuebles disponibles:" << endl;
+    for (dtinmueble inm : inmuebles) {
+        cout << "- Código: " << inm.getCodigo()
+             << " | Dirección: " << inm.getDireccion().getCalle() << " " << inm.getDireccion().getNumeroPuerta() << ", " << inm.getDireccion().getDepartamento() << endl;
+    }
+
+    int codigoInmueble;
+    cout << "\nIngrese código del inmueble a eliminar: ";
+    codigoInmueble = leerEntero();
+
+    // Buscar inmueble
+    dtinmueble inmuebleSeleccionado;
+    bool encontrado = false;
+    for (dtinmueble inm : inmuebles) {
+        if (inm.getCodigo() == codigoInmueble) {
+            inmuebleSeleccionado = inm;
+            encontrado = true;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "Inmueble no encontrado." << endl;
+        return;
+    }
+
+    // Mostrar detalle
+    cout << "\n=== DETALLE DEL INMUEBLE ===" << endl;
+    cout << "Código: " << inmuebleSeleccionado.getCodigo() << endl;
+    cout << "Dirección: " << inmuebleSeleccionado.getDireccion().getCalle() << " " 
+         << inmuebleSeleccionado.getDireccion().getNumeroPuerta() << ", " 
+         << inmuebleSeleccionado.getDireccion().getDepartamento() << endl;
+    cout << "Superficie: " << inmuebleSeleccionado.getSuperficie() << " m2" << endl;
+    cout << "Año construcción: " << inmuebleSeleccionado.getAnioConstruccion() << endl;
+
+    string confirma;
+    cout << "\n¿Desea eliminar este inmueble? (s/n): ";
+    cin >> confirma;
+
+    if (confirma == "s" || confirma == "S") {
+        isistema->eliminarInmueble(codigoInmueble);
+        cout << "Inmueble eliminado exitosamente." << endl;
+    } else {
+        cout << "Operación cancelada." << endl;
+    }
+}
+
 // Alta de administracion de propiedad.
 void menuAltaAdministracionPropiedad(ISistema* isistema) {
     cout << "\n=== ALTA DE ADMINISTRACIÓN DE PROPIEDAD ===" << endl;
@@ -689,7 +747,7 @@ int main() {
                 menuConsultaPublicaciones(isistema);
                 break;
             case 4:
-                cout << "Opción 'Eliminar inmueble' no implementada aún." << endl;
+                menuEliminarInmueble(isistema);
                 break;
             case 5:
                 menuAltaAdministracionPropiedad(isistema);

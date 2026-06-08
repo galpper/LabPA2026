@@ -35,6 +35,13 @@ int publicacion::getIdPublicacion() {
 }
 
 publicacion::~publicacion() {
+    IIterator * it = agendas->getIterator();
+    while (it->hasCurrent()) {
+        ICollectible * a = it->getCurrent();
+        it->next();
+        delete a;
+    }
+    delete it;
     delete agendas;
 }
 
