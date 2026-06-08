@@ -13,6 +13,7 @@
 #include "Clases/h/apartamento.h"
 #include "Clases/h/administracionpropiedad.h"
 #include "Clases/h/publicacion.h"
+#include "Clases/h/agenda.h"
 
 // ICollection
 #include "ICollection/collections/OrderedDictionary.h"
@@ -523,7 +524,6 @@ set<dtinmueble> Sistema::listarTodosInmuebles() {
     delete iteradorInmuebles;
     return conjuntoInmuebles;
 }
-// Listar todos los inmuebles con información del propietario.
 set<dtinmueble> Sistema::listarTodosInmueblesConPropietario() {
     set<dtinmueble> conjuntoInmuebles;
     
@@ -536,7 +536,6 @@ set<dtinmueble> Sistema::listarTodosInmueblesConPropietario() {
             while (iteradorInmuebles->hasCurrent()) {
                 inmueble * inmuebleActual = (inmueble*) iteradorInmuebles->getCurrent();
                 dtdireccion direccionDT(inmuebleActual->getDireccion().getNumero(), inmuebleActual->getDireccion().getCalle(), inmuebleActual->getDireccion().getDepartamento());
-                // Crear un DataType que incluya el nombre del propietario
                 dtinmueble datosInmueble("", direccionDT, inmuebleActual->getSuperficie(), inmuebleActual->getAnioConstruccion(), inmuebleActual->getCodigo(), inmuebleActual->getTipoInmueble());
                 conjuntoInmuebles.insert(datosInmueble);
                 iteradorInmuebles->next();
@@ -549,9 +548,9 @@ set<dtinmueble> Sistema::listarTodosInmueblesConPropietario() {
     return conjuntoInmuebles;
 }
 
+
 // Eliminar inmueble.
 void Sistema::eliminarInmueble(int codigoInmueble) {
-    // 1. Buscar el inmueble
     Integer claveInmueble(codigoInmueble);
     inmueble * inmuebleAEliminar = (inmueble*) inmuebles->find(&claveInmueble);
     
@@ -559,7 +558,6 @@ void Sistema::eliminarInmueble(int codigoInmueble) {
         return;
     }
     
-    // 2. Eliminar todas las publicaciones asociadas, sus agendas y administraciones
     IIterator * iteradorUsuarios = usuarios->getIterator();
     administracionpropiedad * administracionAEliminar = nullptr;
     inmobiliaria * inmobiliariaConAdmin = nullptr;
@@ -585,32 +583,15 @@ void Sistema::eliminarInmueble(int codigoInmueble) {
     }
     delete iteradorUsuarios;
     
-    // 3. Eliminar publicaciones y agendas
     if (administracionAEliminar != nullptr) {
-        IIterator * iteradorPublicaciones = administracionAEliminar->getPublicaciones()->getIterator();
-        while (iteradorPublicaciones->hasCurrent()) {
-            publicacion * publicacionAEliminar = (publicacion*) iteradorPublicaciones->getCurrent();
-            IIterator * iteradorAgendas = publicacionAEliminar->getAgendas()->getIterator();
-            while (iteradorAgendas->hasCurrent()) {
-                iteradorAgendas->next();
-            }
-            delete iteradorAgendas;
-            delete publicacionAEliminar;
-            iteradorPublicaciones->next();
-        }
-        delete iteradorPublicaciones;
-        
-        // Eliminar la administración de la inmobiliaria
         if (inmobiliariaConAdmin != nullptr) {
             inmobiliariaConAdmin->getAdministraciones()->remove((ICollectible*)administracionAEliminar);
         }
         delete administracionAEliminar;
     }
     
-    // 4. Eliminar el inmueble del diccionario de inmuebles
     inmuebles->remove(&claveInmueble);
     
-    // 5. Eliminar el inmueble del propietario
     IIterator * iteradorPropietarios = usuarios->getIterator();
     while (iteradorPropietarios->hasCurrent()) {
         usuario * usuarioActual = (usuario*) iteradorPropietarios->getCurrent();
@@ -621,4 +602,6 @@ void Sistema::eliminarInmueble(int codigoInmueble) {
         iteradorPropietarios->next();
     }
     delete iteradorPropietarios;
+    
+    delete inmuebleAEliminar;
 }
