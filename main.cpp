@@ -288,6 +288,74 @@ void menuConsultaPublicaciones(ISistema* isistema) {
     system("clear");
 }
 
+// Eliminar inmueble.
+void menuEliminarInmueble(ISistema* isistema) {
+    cout << "\n=== ELIMINAR INMUEBLE ===" << endl;
+    set<dtinmueble> todosinmuebles = isistema->listarTodosInmueblesConPropietario();
+    if (todosinmuebles.empty()) {
+        cout << "No hay inmuebles registrados en el sistema." << endl;
+        cout << "\nPresione Enter para continuar...";
+        cin.ignore();
+        cin.get();
+        system("clear");
+        return;
+    }
+
+    cout << "\nListado de inmuebles:" << endl;
+    for (dtinmueble inmuebleActual : todosinmuebles) {
+        cout << "- Código: " << inmuebleActual.getCodigo() 
+             << " | Dirección: " << inmuebleActual.getDireccion().getCalle() << " " << inmuebleActual.getDireccion().getNumeroPuerta() << ", " << inmuebleActual.getDireccion().getDepartamento()
+             << " | Tipo: " << (inmuebleActual.getTipoInmueble() == TipoInmueble::CASA ? "Casa" : "Apartamento") << endl;
+    }
+
+    int codigoInmuebleSeleccionado;
+    cout << "\nIngrese el código del inmueble a eliminar: ";
+    codigoInmuebleSeleccionado = leerEntero();
+
+    // Buscar el inmueble para mostrar detalle
+    dtinmueble inmuebleAMostrar;
+    bool encontrado = false;
+    for (dtinmueble inmuebleActual : todosinmuebles) {
+        if (inmuebleActual.getCodigo() == codigoInmuebleSeleccionado) {
+            inmuebleAMostrar = inmuebleActual;
+            encontrado = true;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "Inmueble no encontrado." << endl;
+        cout << "\nPresione Enter para continuar...";
+        cin.ignore();
+        cin.get();
+        system("clear");
+        return;
+    }
+
+    cout << "\n=== DETALLE DEL INMUEBLE ===" << endl;
+    cout << "Código: " << inmuebleAMostrar.getCodigo() << endl;
+    cout << "Superficie: " << inmuebleAMostrar.getSuperficie() << " m2" << endl;
+    cout << "Año de construcción: " << inmuebleAMostrar.getAnioConstruccion() << endl;
+    cout << "Dirección: " << inmuebleAMostrar.getDireccion().getCalle() << " " << inmuebleAMostrar.getDireccion().getNumeroPuerta() << ", " << inmuebleAMostrar.getDireccion().getDepartamento() << endl;
+    cout << "Tipo: " << (inmuebleAMostrar.getTipoInmueble() == TipoInmueble::CASA ? "Casa" : "Apartamento") << endl;
+
+    string confirmarEliminacion;
+    cout << "\n¿Desea eliminar este inmueble? (s/n): ";
+    cin >> confirmarEliminacion;
+
+    if (confirmarEliminacion == "s" || confirmarEliminacion == "S") {
+        isistema->eliminarInmueble(codigoInmuebleSeleccionado);
+        cout << "Inmueble eliminado exitosamente junto con todas sus publicaciones." << endl;
+    } else {
+        cout << "Operación cancelada. El inmueble permanece en el sistema." << endl;
+    }
+
+    cout << "\nPresione Enter para continuar...";
+    cin.ignore();
+    cin.get();
+    system("clear");
+}
+
 // Alta de administracion de propiedad.
 void menuAltaAdministracionPropiedad(ISistema* isistema) {
     cout << "\n=== ALTA DE ADMINISTRACIÓN DE PROPIEDAD ===" << endl;

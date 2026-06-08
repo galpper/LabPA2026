@@ -56,5 +56,8 @@ class ISistema {
 
         virtual set<dtpublicacion> listarTodasPublicaciones() = 0;
         virtual set<dtinmueble> listarTodosInmuebles() = 0;
+
+        virtual set<dtinmueble> listarTodosInmueblesConPropietario() = 0;
+        virtual void eliminarInmueble(int codigoInmueble) = 0;
 };
 #endif

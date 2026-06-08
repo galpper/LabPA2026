@@ -83,5 +83,8 @@ class Sistema : public ISistema {
 
     set<dtpublicacion> listarTodasPublicaciones() override;
     set<dtinmueble> listarTodosInmuebles() override;
+
+    set<dtinmueble> listarTodosInmueblesConPropietario() override;
+    void eliminarInmueble(int codigoInmueble) override;
 };
 #endif
