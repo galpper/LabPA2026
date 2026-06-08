@@ -221,8 +221,11 @@ set<dtinmueble> Sistema::seleccionarInmueble(string nickname){
 }
 
 bool Sistema::altaPublicacion(int codigoInmueble, TipoPublicacion tipo, string texto, float precio){
-    DTFecha fechaActual = obtenerFecha();
-
+    time_t tiempoActual = time(0);
+    tm* fechaLocal = localtime(&tiempoActual);
+    int dia = fechaLocal->tm_mday;
+    int mes = fechaLocal->tm_mon + 1;
+    int anio = fechaLocal->tm_year + 1900;
     int idPublicacion = ++ultimoIdPublicacion;
 
     return inmobiliariaActual->crearPublicacion(
@@ -230,7 +233,7 @@ bool Sistema::altaPublicacion(int codigoInmueble, TipoPublicacion tipo, string t
         tipo,
         texto,
         precio,
-        fechaActual,
+        fechaActual = DTFecha(dia,mes,anio),
         idPublicacion
     );
 }
