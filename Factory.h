@@ -7,5 +7,6 @@
 class Factory {
     public:
         static ISistema * getSistema();
+        static void destroySistema();
 };
 #endif

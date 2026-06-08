@@ -772,6 +772,7 @@ int main() {
         }
     } while (opcion != 0);
     
-    delete isistema;
+    Factory::destroySistema();
+    isistema = nullptr;
     return 0;
 }

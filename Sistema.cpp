@@ -58,6 +58,12 @@ Sistema * Sistema::getInstance() {
     return instance;
 }
 
+// Liberar la instancia unica del sistema.
+void Sistema::destroyInstance() {
+    delete instance;
+    instance = NULL;
+}
+
 // Verificar existencia de usuario.
 bool Sistema::existeUsuario(string nickname, string pass, string nombre, string email, TipoUsuario tipoUsuario) {
     String k(nickname.c_str());

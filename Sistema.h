@@ -43,6 +43,7 @@ class Sistema : public ISistema {
   public:
     ~Sistema();
     static Sistema * getInstance();
+    static void destroyInstance();
 
     bool existeUsuario(string nickname, string pass, string nombre, string email, TipoUsuario tipoUsuario) override;
     void altaCliente(string apellido, int documento) override;
